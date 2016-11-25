@@ -100,7 +100,7 @@ for col in cols.keys():
     ))
 
 data_path = seg.get_results_dir().nuclei_data
-print('test da')
+print('test das')
 """
 # save dataframes as csv
 
