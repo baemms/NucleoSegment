@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="13cd4c5e-8e95-43ea-90e5-8b8cf2c8b353" name="Default" comment="Test">
+    <list default="true" id="13cd4c5e-8e95-43ea-90e5-8b8cf2c8b353" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pandas_test.py" afterPath="$PROJECT_DIR$/pandas_test.py" />
     </list>
@@ -59,8 +60,8 @@
           <file leaf-file-name="pandas_test.py" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/pandas_test.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="252">
-                  <caret line="102" column="13" selection-start-line="102" selection-start-column="13" selection-end-line="102" selection-end-column="13" />
+                <state relative-caret-position="335">
+                  <caret line="95" column="13" selection-start-line="95" selection-start-column="13" selection-end-line="95" selection-end-column="13" />
                   <folding>
                     <element signature="e#79#97#0" expanded="true" />
                   </folding>
@@ -71,7 +72,7 @@
           <file leaf-file-name="segmentation.py" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/processing/segmentation.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="375">
+                <state relative-caret-position="16184">
                   <caret line="977" column="25" selection-start-line="977" selection-start-column="25" selection-end-line="977" selection-end-column="25" />
                   <folding />
                 </state>
@@ -81,7 +82,7 @@
           <file leaf-file-name="image.py" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/storage/image.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="2448">
+                <state relative-caret-position="2567">
                   <caret line="151" column="16" selection-start-line="151" selection-start-column="16" selection-end-line="151" selection-end-column="48" />
                   <folding>
                     <element signature="e#68#78#0" expanded="true" />
@@ -103,7 +104,7 @@
           <file leaf-file-name="nucleo_segment.py" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/nucleo_segment.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="68">
+                <state relative-caret-position="85">
                   <caret line="5" column="10" selection-start-line="5" selection-start-column="10" selection-end-line="5" selection-end-column="10" />
                   <folding>
                     <element signature="e#56#73#0" expanded="true" />
@@ -131,7 +132,7 @@
               <file leaf-file-name="labels.py" pinned="false" current-in-tab="false">
                 <entry file="file://$PROJECT_DIR$/frontend/gui/labels.py">
                   <provider selected="true" editor-type-id="text-editor">
-                    <state relative-caret-position="1904">
+                    <state relative-caret-position="1955">
                       <caret line="115" column="42" selection-start-line="115" selection-start-column="42" selection-end-line="115" selection-end-column="42" />
                       <folding>
                         <element signature="e#32#51#0" expanded="true" />
@@ -628,7 +629,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1680" height="988" extended-state="6" />
-    <editor active="true" />
+    <editor active="false" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.24954791" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32900432" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
@@ -928,7 +929,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/storage/image.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2448">
+        <state relative-caret-position="2567">
           <caret line="151" column="16" selection-start-line="151" selection-start-column="16" selection-end-line="151" selection-end-column="48" />
           <folding>
             <element signature="e#68#78#0" expanded="true" />
@@ -946,7 +947,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/nucleo_segment.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="68">
+        <state relative-caret-position="85">
           <caret line="5" column="10" selection-start-line="5" selection-start-column="10" selection-end-line="5" selection-end-column="10" />
           <folding>
             <element signature="e#56#73#0" expanded="true" />
@@ -964,7 +965,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/frontend/gui/labels.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1904">
+        <state relative-caret-position="1955">
           <caret line="115" column="42" selection-start-line="115" selection-start-column="42" selection-end-line="115" selection-end-column="42" />
           <folding>
             <element signature="e#32#51#0" expanded="true" />
@@ -1032,7 +1033,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/processing/segmentation.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="375">
+        <state relative-caret-position="16184">
           <caret line="977" column="25" selection-start-line="977" selection-start-column="25" selection-end-line="977" selection-end-column="25" />
           <folding />
         </state>
@@ -1040,8 +1041,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/pandas_test.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="252">
-          <caret line="102" column="13" selection-start-line="102" selection-start-column="13" selection-end-line="102" selection-end-column="13" />
+        <state relative-caret-position="335">
+          <caret line="95" column="13" selection-start-line="95" selection-start-column="13" selection-end-line="95" selection-end-column="13" />
           <folding>
             <element signature="e#79#97#0" expanded="true" />
           </folding>
