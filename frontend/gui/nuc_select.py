@@ -36,7 +36,7 @@ class NucleoSelect(QtGui.QDialog):
 
     RBG_MODE = ['SEL', 'ADD', 'DEL']
     RBG_TOOL = ['POINT', 'BRUSH']
-    RBG_LAYER = ['NUCLEI', 'NONUC', 'FILA', 'FILTERED', 'ADDED', 'LABELS', 'OVERLAP']
+    RBG_LAYER = ['NUCLEI', 'NONUC', 'FILA', 'FILTERED', 'ADDED', 'LABELS', 'OVERLAP', 'REMERGED']
 
     def __init__(self, image_info, parent=None):
         super(NucleoSelect, self).__init__(parent)
@@ -54,7 +54,7 @@ class NucleoSelect(QtGui.QDialog):
         self.correction = Correction(self.segmentation)
 
         # get nuclei
-        self.nuclei = self.segmentation.nuclei.copy()
+        self.nuclei = self.segmentation.nuclei
         
         # set variables
         self.cur_nID = -1
@@ -74,7 +74,6 @@ class NucleoSelect(QtGui.QDialog):
         # set draw nuclei params
         self.draw_nuclei_coords = [self.draw_nuclei_z, 0, 0]
 
-        self.cur_nucleus = None
         self.prev_nucleus = None
 
         self.nuclei_details = dict()
@@ -83,7 +82,7 @@ class NucleoSelect(QtGui.QDialog):
         self.cnv_nucleus_planes = None
         self.thr_nucleus_planes = None
 
-        self.set_cur_nucleus(0)
+        self.set_cur_nID(self.nuclei.get_nID_from_sID(0, only_accepted=True))
 
         # set main layout
         self.setLayout(self.prep_ctn_nucleus_edt())
@@ -99,6 +98,22 @@ class NucleoSelect(QtGui.QDialog):
 
         # prepare keyboard shortcuts
         self.set_key_shortcuts()
+
+        # show short stats
+        self.show_stats_summary()
+
+    def show_stats_summary(self):
+        """
+        Show a brief summary of the stats
+
+        :return:
+        """
+        print('Nuclei: %i' % len(self.segmentation.nuclei.get_nIDs(only_accepted=True)))
+        print('Raw: %i' % len(self.segmentation.nuclei.get_nIDs(only_accepted=False)))
+        print('Filtered: %i' % (len(self.correction.corr_filtered) if (self.correction.corr_filtered is not None) else 0))
+        print('Removed: %i' % (len(self.correction.corr_nonuc) if (self.correction.corr_nonuc is not None) else 0))
+        print('Corrected: %i' % (len(self.correction.corr_fila) if (self.correction.corr_fila is not None) else 0))
+        print('Added: %i' % (len(self.correction.corr_remerge) if (self.correction.corr_remerge is not None) else 0))
 
     def set_key_shortcuts(self):
         """
@@ -187,7 +202,7 @@ class NucleoSelect(QtGui.QDialog):
         self.chk_is_nucleus.setChecked(checked)
 
         # save
-        self.save_nucleus_corr()
+        self.save_nucleus_corr(save_to_exp=False)
 
     def prep_ctn_nucleus_edt(self):
         """
@@ -345,16 +360,6 @@ class NucleoSelect(QtGui.QDialog):
 
         return container
 
-    def sort_nuclei(self):
-        """
-        Sort nuclei according to the selected criteria
-
-        :return:
-        """
-
-        # set nuclei to sorted properties
-        self.nuclei = self.segmentation.sorted_probs.copy()
-
     def sort_nuclei_examples(self, criteria):
         """
         Sort examples of nuclei according to the chosen criteria
@@ -367,25 +372,25 @@ class NucleoSelect(QtGui.QDialog):
         self.fig_nuclei_sort_examples.clear()
         self.fig_nuclei_sort_hist.clear()
 
-        # sort examples by criteria
-        self.sorted_labels = self.segmentation.get_sorted_prop_list(criteria.lower(), is_nuclei=True)
+        # sort nuclei
+        self.segmentation.nuclei.sort_nuclei(criteria.lower())
+
+        # get sorted list
+        sorted_params = self.segmentation.nuclei.get_param_list_from_nuclei(criteria.lower(), only_accepted=True)
 
         # show histogram
         Plot.view_histogram_of_value_list(self.fig_nuclei_sort_hist,
-                                          self.sorted_labels,
+                                          sorted_params,
                                           cfg.criteria_select_hist_bins)
 
         # slider
         self.sld_nuclei_sort.valueChanged[int].connect(getattr(self, 'change_criteria_example_' + criteria.lower()))
         self.sld_nuclei_sort.setMinimum(0)
-        self.sld_nuclei_sort.setMaximum(len(self.segmentation.sorted_probs))
+        self.sld_nuclei_sort.setMaximum(len(sorted_params))
 
         # draw canvas
         self.cnv_nuclei_sort_examples.draw()
         self.cnv_nuclei_sort_hist.draw()
-
-        # sort nuclei
-        self.sort_nuclei()
 
     def change_criteria_example_volume(self, example_selected):
         """
@@ -402,6 +407,14 @@ class NucleoSelect(QtGui.QDialog):
         :return:
         """
         self.change_criteria_example('depth', example_selected)
+
+    def change_criteria_example_surface(self, example_selected):
+        """
+        Change criteria example for surface
+
+        :return:
+        """
+        self.change_criteria_example('surface', example_selected)
 
     def change_criteria_example_membrane_int(self, example_selected):
         """
@@ -443,8 +456,9 @@ class NucleoSelect(QtGui.QDialog):
         if new_pos < 0:
             new_pos = 0
 
-        if new_pos > len(self.nuclei):
-            new_pos = len(self.nuclei)
+        nIDs = self.nuclei.get_nIDs(only_accepted=True)
+        if new_pos > len(nIDs):
+            new_pos = len(nIDs)
 
         # change examples
         self.change_criteria_example(self.cur_sort_criteria.lower(), new_pos)
@@ -458,7 +472,12 @@ class NucleoSelect(QtGui.QDialog):
         :return:
         """
         if example_selected is None:
-            example_selected = self.cur_nID
+            example_selected = self.nuclei.get_sID_from_nID(self.cur_nID, only_accepted=True)
+
+            # if the current nID is not in the list
+            # take the first one
+            if example_selected is None:
+                example_selected = 0
 
         # set slider
         self.sld_nuclei_sort.setValue(example_selected)
@@ -470,8 +489,10 @@ class NucleoSelect(QtGui.QDialog):
 
         max_range = example_selected + cfg.nucleus_select_example_range
 
-        if max_range > len(self.segmentation.sorted_probs):
-            max_range = len(self.segmentation.sorted_probs)
+        nIDs = self.nuclei.get_nIDs(only_accepted=True)
+
+        if max_range > len(nIDs):
+            max_range = len(nIDs)
 
         # prepare examples
         examples = list()
@@ -486,32 +507,38 @@ class NucleoSelect(QtGui.QDialog):
 
         # show examples from each part
         counter = 0
-        for i in range(min_range, max_range):
-            lamin_box = self.segmentation.sorted_probs[i]['lamin_box']
-            lamin_slice = lamin_box[:, round(lamin_box.shape[1] / 2), :]
 
-            example_title = '%i\n%.2f' % (self.segmentation.sorted_probs[i]['nID'],
-                                          self.segmentation.sorted_probs[i][param])
+        for i in range(min_range, max_range):
+            # get nucleus
+            nID = self.nuclei.get_nID_from_sID(i, only_accepted=True)
+
+            # get image boxes
+            #lamin_box = self.nuclei.get_img_boxes(nID, 'lamin')
+            #lamin_slice = lamin_box[:, round(lamin_box.shape[1] / 2), :]
+            info_img = self.nuclei.get_extra_infos(nID, 'img')
+            lamin_slice = self.nuclei.get_extra_infos(nID, 'lamin_slice')
+
+            example_title = '%i\n%.2f' % (nID, self.nuclei.get_param(param, nID))
 
             # prepare image
-            examples = Plot.prepare_output(examples, self.segmentation.sorted_probs[i]['img'],
+            examples = Plot.prepare_output(examples, info_img,
                                            example_title, cfg.criteria_select_eg_colour)
             examples = Plot.prepare_output(examples, lamin_slice,
                                            example_title, cfg.criteria_select_eg_lamin_colour)
 
             # update button
-            self.btns_select_for_corr[counter].setText(str(self.segmentation.sorted_probs[i]['nID']))
+            self.btns_select_for_corr[counter].setText(str(nID))
             self.btns_select_for_corr[counter].setEnabled(True)
 
             # set lID
-            self.lID_for_btn_select_for_corr.append(i)
+            self.lID_for_btn_select_for_corr.append(nID)
 
             counter += 1
 
         clear_figures = False
 
         # clear at end
-        if (max_range + cfg.nucleus_select_example_range * 2) > len(self.segmentation.sorted_probs):
+        if (max_range + cfg.nucleus_select_example_range * 2) > len(nIDs):
             clear_figures = True
 
         # clear at beginning
@@ -765,6 +792,8 @@ class NucleoSelect(QtGui.QDialog):
             self.draw_nuclei_cur_layer = self.segmentation.stacks.labels
         elif self.draw_nuclei_layer == self.RBG_LAYER.index('OVERLAP'):
             self.draw_nuclei_cur_layer = self.correction.stacks.overlap
+        elif self.draw_nuclei_layer == self.RBG_LAYER.index('REMERGED'):
+            self.draw_nuclei_cur_layer = self.correction.stacks.remerge
 
         return self.draw_nuclei_cur_layer
 
@@ -866,7 +895,7 @@ class NucleoSelect(QtGui.QDialog):
         # plot nuclei
         Plot.show_nucleus_planes(self.fig_nucleus_planes,
                                  self.stack_boxes,
-                                 self.cur_nucleus)
+                                 self.segmentation.nuclei.get_nucleus_centroids(self.cur_nID))
 
         self.cnv_nucleus_planes.draw()
 
@@ -975,15 +1004,44 @@ class NucleoSelect(QtGui.QDialog):
         """
 
         # calculate next nucleus
-        new_id = self.cur_nID + direction
-
-        self.set_cur_nucleus(new_id)
+        self.set_cur_nID(self.get_next_nID(self.cur_nID, direction))
 
         # set nID text box
-        self.edt_select_nID.setText(str(self.cur_nucleus['nID']))
+        self.edt_select_nID.setText(str(self.cur_nID))
 
         # select new nucleus
         self.nucleus_select()
+
+    def get_next_nID(self, nID=None, direction=0):
+        """
+        Get the next nucleus in the sorted sequence
+
+        :param nID:
+        :param direction:
+        :return:
+        """
+        next_nID = None
+
+        if nID is None:
+            nID = self.cur_nID
+
+        # get sequence ID of nucleus
+        sID = self.nuclei.get_sID_from_nID(nID, only_accepted=True)
+
+        if sID is not None:
+            # calc next nucleus
+            if direction > 0:
+                sID = sID + 1
+            elif direction < 0:
+                sID = sID - 1
+
+            # get next ID
+            next_nID = self.nuclei.get_nID_from_sID(sID, only_accepted=True)
+
+        if next_nID is None:
+            next_nID = self.cur_nID
+
+        return next_nID
 
     def update_nucleus_fields(self):
         """
@@ -992,36 +1050,41 @@ class NucleoSelect(QtGui.QDialog):
         :return:
         """
         # is it a nucleus?
-        if self.correction.is_correction_nonuc(self.cur_nucleus) is False:
+        if self.correction.is_correction_nonuc(self.cur_nID) is False:
             self.chk_is_nucleus.setChecked(True)
         else:
             self.chk_is_nucleus.setChecked(False)
 
         # start and stop
-        self.edt_z_start.setText(str(self.cur_nucleus['centroid'][0][0]))
-        self.edt_z_stop.setText(str(self.cur_nucleus['centroid'][-1][0]))
+        self.edt_z_start.setText(str(
+            int(float(self.segmentation.nuclei.get_nucleus_centroids(self.cur_nID)[0, 0]))
+        ))
+        self.edt_z_stop.setText(str(
+            int(float(self.segmentation.nuclei.get_nucleus_centroids(self.cur_nID)[-1, 0]))
+        ))
 
+        # TODO how to best return a validated collection for the params
         # get validated params
-        nucleus_params = self.segmentation.get_validated_params_for_nucleus(self.cur_nucleus)
+        #nucleus_params = self.segmentation.get_validated_params_for_nucleus(self.cur_nID)
 
         # show validated params
-        print('nucleus params')
-        for nucleus_filter in nucleus_params[0].keys():
+        #print('nucleus params')
+        #for nucleus_filter in nucleus_params[0].keys():
 
-            print('\t %s: %.2f %r' % (nucleus_filter,
-                                      nucleus_params[0][nucleus_filter]['value'],
-                                      nucleus_params[0][nucleus_filter]['error'])
-                  )
+        #    print('\t %s: %.2f %r' % (nucleus_filter,
+        #                              nucleus_params[0][nucleus_filter]['value'],
+        #                              nucleus_params[0][nucleus_filter]['error'])
+        #          )
 
-        print('labels params')
-        for labels_filter in nucleus_params[1].keys():
-            print('\t %s: min:%.2f max:%.2f %r' % (labels_filter,
-                                                   nucleus_params[1][labels_filter]['min'],
-                                                   nucleus_params[1][labels_filter]['max'],
-                                                   nucleus_params[1][labels_filter]['error'])
-                  )
+        #print('labels params')
+        #for labels_filter in nucleus_params[1].keys():
+        #    print('\t %s: min:%.2f max:%.2f %r' % (labels_filter,
+        #                                           nucleus_params[1][labels_filter]['min'],
+        #                                           nucleus_params[1][labels_filter]['max'],
+        #                                           nucleus_params[1][labels_filter]['error'])
+        #          )
 
-    def set_cur_nucleus(self, id=0):
+    def set_cur_nID(self, id=0):
         """
         Set the current nucleus
 
@@ -1031,7 +1094,7 @@ class NucleoSelect(QtGui.QDialog):
         valid_id = False
 
         # is the id in limit?
-        if id < len(self.nuclei) and id >= 0:
+        if id < len(self.nuclei.get_nIDs()) and id >= 0:
             valid_id = True
 
             # set current as previous nucleus
@@ -1039,10 +1102,6 @@ class NucleoSelect(QtGui.QDialog):
 
             # set ID and nucleus
             self.cur_nID = id
-            self.cur_nucleus = self.nuclei[self.cur_nID]
-
-            # set previous nucleus
-            self.prev_nucleus = self.nuclei[self.prev_nID]
 
         return valid_id
 
@@ -1052,10 +1111,9 @@ class NucleoSelect(QtGui.QDialog):
 
         :return:
         """
-        listID = Segmentation.get_listID_by_nID(self.nuclei, int(self.edt_select_nID.text()))
 
-        if self.set_cur_nucleus(listID) is True:
-            self.lbl_nID.setText(str(listID))
+        if self.set_cur_nID(int(self.edt_select_nID.text())) is True:
+            self.lbl_nID.setText(str(self.cur_nID))
 
         # which tab is currently shown?
         if self.cur_tab == self.TB_DRAW_NUCLEI:
@@ -1196,10 +1254,13 @@ class NucleoSelect(QtGui.QDialog):
             # were nuclei added?
             for nucleus in deleted_nuclei:
                 # this method will delete the nucleus from the list if present
+                print('delete nucleus %i' % nucleus)
                 self.correction.del_correction_added(nucleus)
-
         else:
             self.draw_nuclei_undo_delete_nuclei(pos)
+
+        # apply corrections
+        #self.apply_nucleus_corr()
 
     def draw_nuclei_cursor_rect(self, xy_pos, size):
         """
@@ -1228,7 +1289,7 @@ class NucleoSelect(QtGui.QDialog):
         pos_range = NucleoSelect.calc_rect_at_pos(pos, self.draw_nuclei_del_size)
 
         # lookup nuclei
-        selected_nuclei = self.segmentation.get_nuclei_by_pos_range(pos_range)
+        selected_nuclei = self.segmentation.nuclei.get_nID_by_pos_range(pos_range)
 
         # delete nuclei
         deleted_nuclei = list()
@@ -1237,9 +1298,6 @@ class NucleoSelect(QtGui.QDialog):
                 self.correction.add_correction_nonuc(nucleus)
 
                 deleted_nuclei.append(nucleus)
-
-        # update correction
-        self.correction.save_corrections()
 
         return deleted_nuclei
 
@@ -1250,12 +1308,13 @@ class NucleoSelect(QtGui.QDialog):
         :param pos:
         :return:
         """
+        # TODO this method does not work properly
 
         # calc range
         pos_range = NucleoSelect.calc_rect_at_pos(pos, self.draw_nuclei_del_size)
 
         # lookup nuclei
-        selected_nuclei = self.segmentation.get_raw_nuclei_by_pos_range(pos_range)
+        selected_nuclei = self.segmentation.nuclei.get_nID_by_pos_range(pos_range)
 
         # delete nuclei
         if selected_nuclei is not None:
@@ -1272,8 +1331,8 @@ class NucleoSelect(QtGui.QDialog):
                     self.correction.del_correction_added(nucleus)
 
         # update correction
-        # FIX: Takes a long time
-        self.correction.save_corrections()
+        # TODO: Takes a long time
+        #self.correction.save_corrections()
 
     @staticmethod
     def calc_rect_at_pos(pos, size):
@@ -1305,13 +1364,11 @@ class NucleoSelect(QtGui.QDialog):
         """
 
         # lookup nucleus
-        selected_nucleus = self.segmentation.get_nucleus_by_pos(pos)
+        nID = self.segmentation.nuclei.get_nID_by_pos(pos)
 
-        if selected_nucleus is not None:
+        if nID is not None and nID >= 0:
             # set current nucleus
-            self.set_cur_nucleus(
-                self.segmentation.get_listID(selected_nucleus['nID'])
-            )
+            self.set_cur_nID(nID)
 
             # change tab
             self.change_tab(self.TB_CORR_NUCLEI)
@@ -1325,17 +1382,10 @@ class NucleoSelect(QtGui.QDialog):
         """
 
         # lookup nucleus in nuclei
-        nucleus = self.segmentation.get_nucleus_by_pos(pos)
+        nucleus = self.segmentation.nuclei.get_nID_by_pos(pos)
 
         # lookup nucleus in raw nuclei
-        raw_nucleus = self.segmentation.get_raw_nucleus_by_pos(pos)
-
-        print('nuclei looked up')
-        if nucleus is not None:
-            print(len(nucleus))
-
-        if raw_nucleus is not None:
-            print(len(raw_nucleus))
+        raw_nucleus = self.segmentation.nuclei.get_nID_by_pos(pos, only_accepted=False)
 
         # add raw nucleus to nuclei
         if raw_nucleus is not None:
@@ -1353,32 +1403,27 @@ class NucleoSelect(QtGui.QDialog):
 
             # create a one plane nucleus
             if raw_label is not None:
-                one_plane_nucleus = self.segmentation.create_nucleus(pos[0], raw_label)
+                one_plane_nID = self.segmentation.nuclei.create_nucleus(pos[0], raw_label)
 
-                # how many were already added?
-                nuclei_added = 0
-                if self.correction.corr_added is not None:
-                    nuclei_added = len(self.correction.corr_added)
+                # add to correction list
+                self.correction.add_correction_remerge(one_plane_nID)
 
-                # generate nID
-                one_plane_nucleus = Segmentation.create_nID_by_nuclei(one_plane_nucleus,
-                                                                      self.segmentation.get_raw_nuclei(),
-                                                                      nuclei_added)
+                print('nucleus added for remerge')
 
                 # merge label up and down in the raw labels props stack
-                new_nucleus = self.segmentation.remerge_nucleus(one_plane_nucleus['nID'],
-                                                                0, self.segmentation.stacks.lamin.shape[0],   # along the whole axis
-                                                                merge_depth=True, force_raw_labels_props=True,
-                                                                take_nucleus=one_plane_nucleus)
+                #self.segmentation.nuclei.remerge_nucleus(one_plane_nID,
+                #                                         0, (self.segmentation.stacks.lamin.shape[0] - 1),
+                #                                         merge_depth=True, force_raw_labels_props=True)
 
                 # Does the nucleus overlap with another nucleus?
-                overlapping_nuclei = self.segmentation.get_overlapping_nuclei(new_nucleus)
+                # TODO calculate overlap with other nuclei if needed
+                # overlapping_nuclei = self.segmentation.nuclei.get_overlapping_nuclei(one_plane_nID)
 
                 # FIX: ignore overlap and correct by hand by deleting the wrong nuclei
                 # first and then remerging the new one
-                #overlapping_nuclei = None
+                overlapping_nuclei = None
 
-                print('overlapping nuclei %i' % len(overlapping_nuclei))
+                #print('overlapping nuclei %i' % len(overlapping_nuclei))
 
                 if overlapping_nuclei is not None:
                     for overlapping_nucleus in overlapping_nuclei:
@@ -1388,11 +1433,12 @@ class NucleoSelect(QtGui.QDialog):
                         # add to nonuc
                         self.correction.add_correction_nonuc(overlapping_nucleus)
 
-                # add to nuclei segmentation
-                self.segmentation.add_nucleus_to_list(new_nucleus)
-
                 # add nucleus to correction
-                self.correction.add_correction_added(new_nucleus)
+                self.correction.add_correction_added(one_plane_nID)
+
+        # apply corrections
+        # takes a long time to execute
+        # self.apply_nucleus_corr()
 
     def image_preview_on_motion(self, event):
         """
@@ -1416,11 +1462,13 @@ class NucleoSelect(QtGui.QDialog):
         """
         pouch_img = list()
 
+        nucleus_centroids = self.segmentation.nuclei.get_nucleus_centroids(self.cur_nID)
+
         # get z of nucleus
-        nucleus_pos_z = round((self.cur_nucleus['centroid'][0][0] + self.cur_nucleus['centroid'][-1][0])/2)
-        nucleus_pos_middle = round(len(self.cur_nucleus['centroid'])/2)
-        nucleus_pos_xy = (self.cur_nucleus['centroid'][nucleus_pos_middle][1][1] - 3,
-                          self.cur_nucleus['centroid'][nucleus_pos_middle][1][0] + 3)
+        nucleus_pos_z = round((nucleus_centroids[0, 0] + nucleus_centroids[-1, 0])/2)
+        nucleus_pos_middle = round(len(nucleus_centroids)/2)
+        nucleus_pos_xy = (nucleus_centroids[nucleus_pos_middle, 2] - 3,
+                          nucleus_centroids[nucleus_pos_middle, 1] + 3)
 
         pouch_img = Plot.prepare_output(pouch_img, self.segmentation.stacks.lamin[nucleus_pos_z],
                                         'X', 'gray', text_pos=nucleus_pos_xy, zoom=self.pouch_pos_zoom)
@@ -1443,8 +1491,14 @@ class NucleoSelect(QtGui.QDialog):
         # clear figure
         self.fig_nucleus_box.clear()
 
+        nucleus_boxes = self.segmentation.nuclei.get_img_boxes(self.cur_nID)
+        nucleus_centroids = self.segmentation.nuclei.get_nucleus_centroids(self.cur_nID)
+        nucleus_areas = self.segmentation.nuclei.get_nucleus_areas(self.cur_nID)
+
         # show the nucleus box
-        self.stack_boxes = Plot.show_nucleus_box(self.fig_nucleus_box, self.cur_nucleus, self.segmentation.stacks)
+        self.stack_boxes = Plot.show_nucleus_box(self.fig_nucleus_box,
+                                                 nucleus_boxes, nucleus_centroids, nucleus_areas,
+                                                 self.segmentation.stacks)
 
         # refresh canvas
         self.cvn_nucleus_box.draw()
@@ -1462,23 +1516,31 @@ class NucleoSelect(QtGui.QDialog):
         # show the segmentation per plane
         self.add_to_ctn_nucleus_planes()
 
-    def save_nucleus_corr(self, save_nonuc=True, save_fila=True):
+    def save_nucleus_corr(self, save_to_exp=True):
         """
         Save correction for z
 
         :return:
         """
         # delete nucleus
-        if self.chk_is_nucleus.isChecked() is False and save_nonuc is True:
-            self.correction.add_correction_nonuc(self.cur_nucleus)
+        if self.chk_is_nucleus.isChecked() is False:
+            print('Save nucleus deletion %i' % self.cur_nID)
+
+            self.correction.add_correction_nonuc(self.cur_nID)
         else:
-            if save_fila is True:
-                # correct nucleus
-                self.correction.add_correction_fila(self.cur_nucleus,
-                                                    int(self.edt_z_start.text()), int(self.edt_z_stop.text()))
+            print('Save nucleus correction %i' % self.cur_nID)
+
+            # make sure the nucleus is not in the nonuc list
+            self.correction.del_correction_nonuc(self.cur_nID)
+
+            # correct nucleus
+            self.correction.add_correction_fila(self.cur_nID,
+                                                int(self.edt_z_start.text()),
+                                                int(self.edt_z_stop.text()))
 
         # save corrections to experiment
-        self.correction.save_corrections()
+        if save_to_exp is True:
+            self.correction.save_corrections()
 
     def apply_nucleus_corr(self, save=False):
         """
@@ -1486,15 +1548,11 @@ class NucleoSelect(QtGui.QDialog):
 
         :return:
         """
-
         # save corrections
         self.correction.save_corrections()
 
         # apply corrections and do not save to disk
         self.correction.apply_corrections(save=save)
-
-        # reload nuclei
-        self.sort_nuclei()
 
         # reload drawing
         self.show_draw_nuclei()

@@ -26,12 +26,14 @@ class Correction:
         self.corr_filtered = None
         self.corr_added = None
         self.corr_overlap = None
+        self.corr_remerge = None
 
         self.nuclei_nonuc = None
         self.nuclei_fila = None
         self.nuclei_filtered = None
         self.nuclei_added = None
         self.nuclei_overlap = None
+        self.nuclei_remerge = None
 
         self.stacks = Stack()
         self.stacks.nonuc = None
@@ -39,165 +41,183 @@ class Correction:
         self.stacks.filtered = None
         self.stacks.added = None
         self.stacks.overlap = None
+        self.stacks.remerge = None
 
         # load corrections from experiment
         self.load_corrections()
 
-    def add_correction_fila(self, nucleus, start, stop):
+    def add_correction_fila(self, nID, start, stop):
         """
-        Add correction to start/stop of nucleus
+        Add correction to start/stop of nID
 
-        :param nucleus:
+        :param nID:
         :param start:
         :param stop:
         :return:
         """
-        self.corr_fila = self.add_to_correction_list(self.corr_fila, nucleus, start, stop)
+        self.corr_fila = self.add_to_correction_list(self.corr_fila, nID, start, stop)
 
-    def del_correction_fila(self, nucleus):
+    def del_correction_fila(self, nID):
         """
-        delete correction to start/stop of nucleus
+        delete correction to start/stop of nID
 
-        :param nucleus:
+        :param nID:
         :return:
         """
-        self.corr_fila = self.del_from_correction_list(self.corr_fila, nucleus)
+        self.corr_fila = self.del_from_correction_list(self.corr_fila, nID)
 
-    def add_correction_nonuc(self, nucleus):
+    def add_correction_nonuc(self, nID):
         """
-        Add nucleus to non-nucleus list
+        Add nID to non-nID list
 
-        :param nucleus:
+        :param nID:
         :return:
         """
-        self.corr_nonuc = self.add_to_correction_list(self.corr_nonuc, nucleus)
+        self.corr_nonuc = self.add_to_correction_list(self.corr_nonuc, nID)
 
-    def del_correction_nonuc(self, nucleus):
+    def del_correction_nonuc(self, nID):
         """
-        Delete nucleus from non-nucleus list
+        Delete nID from non-nID list
 
-        :param nucleus:
+        :param nID:
         :return:
         """
-        self.corr_nonuc = self.del_from_correction_list(self.corr_nonuc, nucleus)
+        self.corr_nonuc = self.del_from_correction_list(self.corr_nonuc, nID)
 
-    def add_nuclei_to_correction_filtered(self, nuclei):
+    def add_nuclei_to_correction_filtered(self, nID, add_to_stack=True):
         """
         Go through nuclei and add to correction filtered
 
-        :param nuclei:
+        :param nID:
         :return:
         """
 
-        for nucleus in nuclei:
-            self.add_correction_filtered(nucleus)
+        for nID in nID:
+            self.add_correction_filtered(nID, add_to_stack=add_to_stack)
 
-    def add_correction_filtered(self, nucleus):
+    def add_correction_filtered(self, nID, add_to_stack=True):
         """
-        Add nucleus to filtered list
+        Add nID to filtered list
 
-        :param nucleus:
+        :param nID:
         :return:
         """
-        self.corr_filtered = self.add_to_correction_list(self.corr_filtered, nucleus)
+        self.corr_filtered = self.add_to_correction_list(self.corr_filtered, nID, add_to_stack=add_to_stack)
 
-    def del_correction_filtered(self, nucleus):
+    def del_correction_filtered(self, nID):
         """
-        Delete nucleus from filtered list
+        Delete nID from filtered list
 
-        :param nucleus:
+        :param nID:
         :return:
         """
-        self.corr_filtered = self.del_from_correction_list(self.corr_filtered, nucleus)
+        self.corr_filtered = self.del_from_correction_list(self.corr_filtered, nID)
 
-    def add_nuclei_to_correction_added(self, nuclei):
+    def add_nuclei_to_correction_added(self, nIDs):
         """
         Go through nuclei and add to correction added
 
-        :param nuclei:
+        :param nIDs:
         :return:
         """
 
-        for nucleus in nuclei:
-            self.add_correction_added(nucleus)
+        for nID in nIDs:
+            self.add_correction_added(nID)
 
-    def add_correction_added(self, nucleus):
+    def add_correction_added(self, nID):
         """
-        Add nucleus to added list
+        Add nID to added list
 
-        :param nucleus:
+        :param nID:
         :return:
         """
-        self.corr_added = self.add_to_correction_list(self.corr_added, nucleus)
+        self.corr_added = self.add_to_correction_list(self.corr_added, nID)
 
-    def del_correction_added(self, nucleus):
+    def del_correction_added(self, nID):
         """
-        Delete nucleus from added list
+        Delete nID from added list
 
-        :param nucleus:
+        :param nID:
         :return:
         """
-        self.corr_added = self.del_from_correction_list(self.corr_added, nucleus)
+        self.corr_added = self.del_from_correction_list(self.corr_added, nID)
 
-    def add_nuclei_to_correction_overlap(self, nuclei):
+    def add_nuclei_to_correction_overlap(self, nIDs):
         """
         Go through nuclei and add to correction overlap
 
-        :param nuclei:
+        :param nIDs:
         :return:
         """
 
-        for nucleus in nuclei:
-            self.add_correction_overlap(nucleus)
+        for nID in nIDs:
+            self.add_correction_overlap(nID)
 
-    def add_correction_overlap(self, nucleus):
+    def add_correction_overlap(self, nID):
         """
-        Add nucleus to overlap list
+        Add nID to overlap list
 
-        :param nucleus:
+        :param nID:
         :return:
         """
-        self.corr_overlap = self.add_to_correction_list(self.corr_overlap, nucleus)
+        self.corr_overlap = self.add_to_correction_list(self.corr_overlap, nID)
 
-    def del_correction_overlap(self, nucleus):
+    def del_correction_overlap(self, nID):
         """
-        Delete nucleus from overlap list
+        Delete nID from overlap list
 
-        :param nucleus:
+        :param nID:
         :return:
         """
-        self.corr_overlap = self.del_from_correction_list(self.corr_overlap, nucleus)
+        self.corr_overlap = self.del_from_correction_list(self.corr_overlap, nID)
 
-    def add_to_correction_list(self, corr_list, nucleus, start=-1, stop=-1):
+    def add_correction_remerge(self, nID):
         """
-        Add nucleus to a correction list
+        Add correction
+
+        :param nID:
+        :return:
+        """
+        self.corr_remerge = self.add_to_correction_list(self.corr_remerge, nID)
+
+    def del_correction_remerge(self, nID):
+        """
+        delete correction to start/stop of nID
+
+        :param nID:
+        :return:
+        """
+        self.corr_remerge = self.del_from_correction_list(self.corr_remerge, nID)
+
+    def add_to_correction_list(self, corr_list, nID, start=-1, stop=-1, add_to_stack=False):
+        """
+        Add nID to a correction list
 
         :param corr_list:
-        :param nucleus:
+        :param nID:
         :return:
         """
-        # save correction to list
         if corr_list is None:
             corr_list = list()
 
-        if nucleus is not None:
-            # is the nucleus already in the list?
+        if nID is not None:
+            # is the nID already in the list?
             mod_lID = -1
-            for lID, cur_nucleus in enumerate(corr_list):
-                if type(cur_nucleus) is int:
-                    cur_ID = cur_nucleus
-                else:
-                    cur_ID = cur_nucleus[0]
+            for lID, corr in enumerate(corr_list):
+                cur_nID = corr
 
-                if cur_ID == nucleus['nID']:
+                if type(corr) is tuple:
+                    cur_nID = corr[0]
+
+                if cur_nID == nID:
                     mod_lID = lID
                     break
 
             # create element to add
             if start >= 0 and stop >= 0:
-                el_to_add = (nucleus['nID'], (start, stop))
+                el_to_add = (nID, (start, stop))
             else:
-                el_to_add = nucleus['nID']
+                el_to_add = nID
 
             if mod_lID < 0:
                 corr_list.append(el_to_add)
@@ -205,29 +225,25 @@ class Correction:
                 corr_list[mod_lID] = el_to_add
 
             # update stacks
-            self.update_correction_stacks()
+            if add_to_stack is True:
+                self.update_correction_stacks()
 
         return corr_list
 
-    def del_from_correction_list(self, corr_list, nucleus):
+    def del_from_correction_list(self, corr_list, nID):
         """
-        Delete nucleus to a correction list
+        Delete nID to a correction list
 
         :param corr_list:
-        :param nucleus:
+        :param nID:
         :return:
         """
-        if nucleus is not None:
-            # is the nucleus in the list?
+        if nID is not None:
+            # is the nID in the list?
             mod_lID = -1
             if corr_list is not None:
-                for lID, cur_nucleus in enumerate(corr_list):
-                    if type(cur_nucleus) is int:
-                        cur_ID = cur_nucleus
-                    else:
-                        cur_ID = cur_nucleus[0]
-
-                    if cur_ID == nucleus['nID']:
+                for lID, cur_nID in enumerate(corr_list):
+                    if cur_nID == nID:
                         mod_lID = lID
                         break
 
@@ -235,43 +251,27 @@ class Correction:
                 # delete from correction
                 corr_list.pop(mod_lID)
 
-                # add to segmentation
-                self.segmentation.add_nucleus_to_list(nucleus)
+            # accept nucleus
+            self.segmentation.nuclei.accept_nucleus(nID)
 
             # update stacks
-            self.update_correction_stacks()
+            # takes a long time if you do that every time
+            # self.update_correction_stacks()
 
         return corr_list
 
-    def is_correction_nonuc(self, nucleus):
+    def is_correction_nonuc(self, nID):
         """
-        Is the nucleus in the non-nucleus list?
+        Is the nID in the non-nID list?
 
-        :param nucleus:
+        :param nID:
         :return:
         """
-        # is the nucleus already in the list?
+        # is the nID already in the list?
         nonuc = False
 
         if self.corr_nonuc is not None:
-            nonuc = Correction.is_correction_nonuc_with_list(nucleus, self.corr_nonuc)
-
-        return nonuc
-
-    @staticmethod
-    def is_correction_nonuc_with_list(nucleus, corr_nonuc_list):
-        """
-        Is the nucleus in the non-nucleus list?
-
-        :param nucleus:
-        :param corr_nonuc_list:
-        :return:
-        """
-        # is the nucleus already in the list?
-        nonuc = False
-
-        for id, cur_nucleus in enumerate(corr_nonuc_list):
-            if cur_nucleus == nucleus['nID']:
+            if nID in self.corr_nonuc:
                 nonuc = True
 
         return nonuc
@@ -306,6 +306,10 @@ class Correction:
             with open(dirs.corr + cfg.file_corr_overlap, "wb") as fin:
                 pickle.dump(self.corr_overlap, fin)
 
+        if self.corr_remerge is not None:
+            with open(dirs.corr + cfg.file_corr_remerge, "wb") as fin:
+                pickle.dump(self.corr_overlap, fin)
+
     def load_corrections(self):
         """
         Load corrections from experiment folder
@@ -336,6 +340,10 @@ class Correction:
             with open(dirs.corr + cfg.file_corr_overlap, "rb") as fin:
                 self.corr_overlap = pickle.load(fin)
 
+        if os.path.isfile(dirs.corr + cfg.file_corr_remerge):
+            with open(dirs.corr + cfg.file_corr_remerge, "rb") as fin:
+                self.corr_remerge = pickle.load(fin)
+
         self.update_correction_stacks()
 
     def update_correction_stacks(self):
@@ -344,12 +352,15 @@ class Correction:
 
         :return:
         """
+        print('TEST UNCOMMENT')
+
         # create nuclei and stacks
-        self.stacks.nonuc = self.update_correction_stack('nonuc')
-        self.stacks.fila = self.update_correction_stack('fila')
-        self.stacks.filtered = self.update_correction_stack('filtered')
-        self.stacks.added = self.update_correction_stack('added')
-        self.stacks.overlap = self.update_correction_stack('overlap')
+        #self.stacks.nonuc = self.update_correction_stack('nonuc')
+        #self.stacks.fila = self.update_correction_stack('fila')
+        #self.stacks.filtered = self.update_correction_stack('filtered')
+        #self.stacks.added = self.update_correction_stack('added')
+        #self.stacks.overlap = self.update_correction_stack('overlap')
+        #self.stacks.remerge = self.update_correction_stack('remerge')
 
     def update_correction_stack(self, var_name):
         """
@@ -372,24 +383,15 @@ class Correction:
 
             # go through and add get nuclei
             for cur_nID in corr_list:
-                if type(cur_nID) is int:
-                    nID = cur_nID
-                else:
-                    nID = cur_nID[0]
+                nID = cur_nID
 
-                nucleus = self.segmentation.get_raw_nucleus_by_id(nID)
-
-                # added nuclei are stored in the primary nuclei list
-                if nucleus is None:
-                    nucleus = self.segmentation.get_nucleus_by_id(nID)
-
-                if nucleus is not None:
-                    nuclei_list.append(nucleus)
+                if nID is not None:
+                    nuclei_list.append(nID)
 
             # add nuclei to stack
             if len(nuclei_list) > 0:
-                stack = self.segmentation.add_nuclei_to_stack(nuclei_list,
-                                                              stack, -1)
+                print('Create correction stack %s' % var_name)
+                stack = self.segmentation.nuclei.add_nuclei_to_stack(stack, nIDs=nuclei_list)
 
         return stack
 
@@ -402,22 +404,39 @@ class Correction:
         # delete non-nuclei
         if self.corr_nonuc is not None:
             for to_delete in self.corr_nonuc:
-                if self.segmentation.is_nucleus_in_nuclei(to_delete):
+                if self.segmentation.nuclei.is_nucleus_in_nuclei(to_delete):
                     print('NONUC %i' % to_delete)
-                    self.segmentation.remove_nucleus(to_delete)
+                    self.segmentation.nuclei.reject_nucleus(to_delete)
                 else:
                     print('attempted NONUC %i' % to_delete)
 
         # go through z corrections
         if self.corr_fila is not None:
             for fila in self.corr_fila:
-                # remerge nucleus
-                if self.segmentation.is_nucleus_in_nuclei(fila[0]):
+                # remerge nID
+                if self.segmentation.nuclei.is_nucleus_in_nuclei(fila[0]):
                     print('FILA %i' % fila[0])
-                    self.segmentation.remerge_nucleus(fila[0], fila[1][0], fila[1][1],
-                                                      force_raw_labels_props=True)  # force to use raw labels
+                    self.segmentation.nuclei.remerge_nucleus(fila[0],
+                                                             int(float(fila[1][0])), int(float(fila[1][1])),
+                                                             force_raw_labels_props=True)  # force to use raw labels
                 else:
                     print('attemped FILA %i' % fila[0])
+
+        # do remerges
+        if self.corr_remerge is not None:
+            for remerge in self.corr_remerge:
+                # remerge nID
+                if self.segmentation.nuclei.is_nucleus_in_nuclei(remerge) \
+                    and self.segmentation.nuclei.get_nucleus_volume(remerge) < 0:
+                    print('REMERGE %i' % remerge)
+                    self.segmentation.nuclei.remerge_nucleus(remerge,
+                                                             0, (self.segmentation.stacks.lamin.shape[0] - 1),
+                                                             merge_depth=True, force_raw_labels_props=True)
+                else:
+                    print('attemped REMERGE %i' % remerge)
+
+        # resort z values
+        self.segmentation.nuclei.sort_vals_by_z()
 
         # update segmentation
         self.segmentation.update(save=save, calc_nuclei_params=False)

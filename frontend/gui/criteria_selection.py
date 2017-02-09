@@ -100,17 +100,14 @@ class CriteriaSelection(QtGui.QDialog):
 
         # set min/max fields for critieria
         for criteria_raw in self.criteria:
-            # lower case criteria
-            criteria_upper = criteria_raw.upper()
-
             # edit boxes
-            if self.loaded_criteria is not None and criteria_upper in self.loaded_criteria.keys():
+            if self.loaded_criteria is not None and criteria_raw in self.loaded_criteria.keys():
                 # set value in edit box
-                if self.loaded_criteria[criteria_upper]['MIN'] is not None:
-                    self.criteria[criteria_raw]['edt_min'].setText(str(self.loaded_criteria[criteria_upper]['MIN']))
+                if self.loaded_criteria[criteria_raw]['MIN'] is not None:
+                    self.criteria[criteria_raw]['edt_min'].setText(str(self.loaded_criteria[criteria_raw]['MIN']))
 
-                if self.loaded_criteria[criteria_upper]['MAX'] is not None:
-                    self.criteria[criteria_raw]['edt_max'].setText(str(self.loaded_criteria[criteria_upper]['MAX']))
+                if self.loaded_criteria[criteria_raw]['MAX'] is not None:
+                    self.criteria[criteria_raw]['edt_max'].setText(str(self.loaded_criteria[criteria_raw]['MAX']))
 
     def save_criteria(self):
         """
@@ -177,7 +174,7 @@ class CriteriaSelection(QtGui.QDialog):
 
         # is param part of the nuclei?
         if lookup_nucleus is True:
-            if self.segmentation.is_param_in_nuclei(param) is False:
+            if self.segmentation.nuclei.is_param_in_nuclei(param) is False:
                 prep_ctn = False
 
         if prep_ctn is True:
@@ -231,9 +228,19 @@ class CriteriaSelection(QtGui.QDialog):
         container.addWidget(self.criteria[param]['edt_min'], 1, 1)
         container.addWidget(self.criteria[param]['edt_max'], 2, 1)
 
-        # get sorted labels
-        self.criteria[param]['sorted_labels'] = self.segmentation.get_sorted_prop_list(param, self.is_nuclei_selection)
-        self.criteria[param]['sorted_props'] = self.segmentation.sorted_probs.copy()
+        # sort nuclei
+        if self.is_nuclei_selection:
+            # sort nuclei
+            self.segmentation.nuclei.sort_nuclei(param)
+
+            # get sorted list
+            # TODO transform the props into a dict
+            self.criteria[param]['sorted_labels'] = self.segmentation.nuclei.get_param_list_from_nuclei(param)
+            self.criteria[param]['sorted_props'] = self.segmentation.nuclei.get_param_list_from_nuclei(create_dict=True)
+        else:
+            # sort labels
+            self.criteria[param]['sorted_labels'] = self.segmentation.get_sorted_prop_list(param)
+            self.criteria[param]['sorted_props'] = self.segmentation.sorted_probs.copy()
 
         # show histogram
         Plot.view_histogram_of_value_list(self.criteria[param]['fig_hist'],

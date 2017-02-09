@@ -46,6 +46,7 @@ rb_draw_nuclei_layer_filtered = labels['nucleus_edit']['RB_DRAW_NUCLEI_LAYER_FIL
 rb_draw_nuclei_layer_labels = labels['nucleus_edit']['RB_DRAW_NUCLEI_LAYER_LABELS']
 rb_draw_nuclei_layer_added = labels['nucleus_edit']['RB_DRAW_NUCLEI_LAYER_ADDED']
 rb_draw_nuclei_layer_overlap = labels['nucleus_edit']['RB_DRAW_NUCLEI_LAYER_OVERLAP']
+rb_draw_nuclei_layer_remerged = labels['nucleus_edit']['RB_DRAW_NUCLEI_LAYER_REMERGED']
 
 # image choice
 img_exp = labels['image_choice']['IMG_EXP']

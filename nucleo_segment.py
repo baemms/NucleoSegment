@@ -41,6 +41,7 @@ infos = ImageHandler.load_image_infos()
 
 # select a specific info
 selected_info_ID = 'N1-19-9'
+#selected_info_ID = None
 selected_info = None
 
 for info in infos:
@@ -120,13 +121,14 @@ elif processing['nuclei'] >= 2:
     seg = Segmentation(selected_info)
     seg.load(force_nuclei_load=force_reload)
     seg.get_nuclei_criteria()
-    removed_nuclei = seg.filter_nuclei()
-    seg.save()
+    removed_nuclei = seg.nuclei.filter_nuclei()
+    seg.save(force_nuclei_stack_rebuild=True)
 
     print('save correction')
     # add nuclei to correction
     corr = Correction(seg)
-    corr.add_nuclei_to_correction_filtered(removed_nuclei)
+    corr.add_nuclei_to_correction_filtered(removed_nuclei, add_to_stack=False)
+    corr.update_correction_stacks()
     corr.save_corrections()
 
     del(seg)
@@ -134,6 +136,7 @@ elif processing['nuclei'] >= 2:
 
 # select
 if processing['select'] == 1:
+    print('=== Select ===')
     test_window = NucleoSelect(selected_info)
     test_window.show()
     test_window.raise_()

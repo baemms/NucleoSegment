@@ -72,14 +72,14 @@ file_nuclei_img_cropped_box = config['Files']['NUCLEI_IMG_CROPPED_BOX']
 file_nuclei_img_projection = config['Files']['NUCLEI_IMG_PROJECTION']
 file_nuclei_img_show = config['Files']['NUCLEI_IMG_SHOW']
 
-
 path_results = config['Paths']['RESULTS']
 path_tmp = config['Paths']['TMP']
 path_results_stacks_raw = config['Paths']['RESULTS_STACKS_RAW']
+path_results_nucleus_params_raw = config['Paths']['RESULTS_NUC_PARAMS_RAW']
 path_results_nuclei = config['Paths']['RESULTS_NUCLEI']
 path_nuclei_data = config['Paths']['NUCLEI_DATA']
 
-label_props_to_get = config['Segmentation']['LABEL_PROPS_TO_GET'].split(',')
+label_props_to_get_keys = config['Segmentation']['LABEL_PROPS_TO_GET_KEYS'].split(',')
 
 """
 Selection for segmentation
@@ -130,12 +130,14 @@ Corrections parameters
 path_corrections = config['Paths']['CORRECTIONS']
 path_correction_stacks = config['Paths']['CORRECTION_STACKS']
 path_results_stacks_corr = config['Paths']['RESULTS_STACKS_CORR']
+path_results_nucleus_params_corr = config['Paths']['RESULTS_NUC_PARAMS_CORR']
 
 file_corr_fila = config['Files']['CORR_FILA']
 file_corr_nonuc = config['Files']['CORR_NONUC']
 file_corr_filtered = config['Files']['CORR_FILTERED']
 file_corr_added = config['Files']['CORR_ADDED']
 file_corr_overlap = config['Files']['CORR_OVERLAP']
+file_corr_remerge = config['Files']['CORR_REMERGE']
 file_nuclei_corr = config['Files']['NUCLEI_CORR']
 file_lookup_corr = config['Files']['LOOKUP_CORR']
 file_labels_props_corr = config['Files']['LABELS_PROPS_CORR']
@@ -181,3 +183,35 @@ clf_train_params = config['Classifier']['TRAIN_PARAMS'].split(',')
 clf_sig_threshold = float(config['Classifier']['SIG_THR'])
 path_classifier = config['Paths']['CLF']
 file_classifier = path_classifier + config['Files']['CLF']
+
+"""
+Pandas datastructures
+"""
+pd_struct_nuclei_cols = {
+    # to be calculated once merged
+    'data_params': ['volume', 'surface', 'depth', 'colour', 'rejected',
+                    'lamin_int', 'dapi_int', 'membrane_int',
+                    'nuc_edge_dist','area_topbot_ratio',
+                    'area_depth_ratio', 'nuc_bbox'],
+    'data_centre': ['z', 'y', 'x'],
+    # from individual labels
+    'data_centroid': ['z', 'y', 'x'],
+    'data_bbox': ['z', 'min_row', 'min_col', 'max_row', 'max_col'],
+    'data_z_params': ['z', 'area', 'perimeter'],
+    'data_coords': ['z', 'y', 'x']
+}
+
+PD_STRUCT_TYPE_VAL = 0
+PD_STRUCT_TYPE_TUPLE = 1
+PD_STRUCT_TYPE_1D = 2
+PD_STRUCT_TYPE_2D = 3
+PD_STRUCT_TYPE_1D_VAL = 4
+
+pd_struct_nuclei_col_types = {
+    'data_params': PD_STRUCT_TYPE_VAL,
+    'data_int': PD_STRUCT_TYPE_VAL,
+    'data_centre': PD_STRUCT_TYPE_TUPLE,
+    'data_centroid': PD_STRUCT_TYPE_1D,
+    'data_coords': PD_STRUCT_TYPE_2D,
+    'data_area': PD_STRUCT_TYPE_1D_VAL
+}

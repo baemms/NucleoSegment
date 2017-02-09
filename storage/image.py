@@ -202,6 +202,29 @@ class ImageHandler:
         return num_imgs
 
     @staticmethod
+    def create_new_id_for_exp(image_infos, id):
+        """
+        Get
+
+        :param image_infos:
+        :param id:
+        :return:
+        """
+        # go through image info and extract the highest ID
+        highest_id = -1
+
+        for info in image_infos:
+            # skip if the ID is revision
+            if not ImageHandler.is_revision_by_ID(info['ID']):
+                if ImageHandler.extract_exp_from_ID(info['ID']) == id:
+                    cur_id = ImageHandler.extract_num_from_ID(info['ID'])
+                    if cur_id > highest_id:
+                        highest_id = cur_id
+
+        # increase id and return
+        return (highest_id + 1)
+
+    @staticmethod
     def is_revision_by_ID(id):
         """
         Is the current ID a revision?

@@ -709,7 +709,7 @@ class NucleoSegment(QtGui.QMainWindow):
 
         # lookup how many images are already in input from this exp
         # and add one
-        img_num = ImageHandler.num_images_from_exp(self.image_infos, img_exp) + 1
+        img_num = ImageHandler.create_new_id_for_exp(self.image_infos, img_exp)
 
         # set parameters
         self.lbl_image_exp.setText(img_exp)

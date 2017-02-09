@@ -1,5 +1,11 @@
 """
 Lookup tables for nuclei
+
+The problem with this is, that the data is kept redundant
+and every time the data is changed, the lookup tables
+also need to be changed. Pandas dataframes provide a
+convenient mean to store the data in one place and still
+use efficient lookup times.
 """
 
 import numpy as np

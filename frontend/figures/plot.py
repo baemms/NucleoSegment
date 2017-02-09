@@ -156,14 +156,14 @@ class Plot:
         return image_stack[:, min_row:max_row, min_col:max_col]
 
     @staticmethod
-    def show_nucleus_planes(fig, stacks, nucleus, view_range=range(0, 0), zoom=1):
+    def show_nucleus_planes(fig, stacks, nucleus_centroids, view_range=range(0, 0), zoom=1):
         """
         Show multiple stacks. This method assumes that all stacks have the same shape
         to show them side by side.
 
         :param fig:
         :param image_stacks:
-        :param nucleus:
+        :param nucleus_centroids:
         :param view_range:
         :param colour_map:
         :param zoom:
@@ -203,8 +203,8 @@ class Plot:
 
         # calculate nucleus first and last
         nucleus_fila = (
-            nucleus['centroid'][0][0],
-            nucleus['centroid'][-1][0]
+            nucleus_centroids[0, 0],
+            nucleus_centroids[-1, 0]
         )
 
         # calculate start of z
@@ -414,31 +414,24 @@ class Plot:
         fig.tight_layout()
 
     @staticmethod
-    def show_nucleus_box(fig, nucleus, stacks, reload=False):
+    def show_nucleus_box(fig, nucleus_boxes, nucleus_centroids, nucleus_areas, stacks, reload=False):
         """
         Show a nucleus in a box
 
         :param fig:
-        :param nucleus:
+        :param nID:
+        :param nucleus_boxes:
         :param stacks:
         :return:
         """
-        stack_boxes = Plot.get_nucleus_boxes(nucleus, stacks, reload=reload)
+        stack_boxes = Plot.get_nucleus_boxes(
+            nucleus_boxes, nucleus_centroids, nucleus_areas, stacks, reload=reload)
 
         # calculate overlays
-        overlay_xy = nucleus['cropped_rgb_box'][round(nucleus['cropped_rgb_box'].shape[0] / 2), :, :].copy()
-        overlay_zx = nucleus['cropped_rgb_box'][:, round(nucleus['cropped_rgb_box'].shape[1] / 2), :].copy()
+        overlay_xy = nucleus_boxes['crop_rgb'][round(nucleus_boxes['crop_rgb'].shape[0] / 2), :, :].copy()
+        overlay_zx = nucleus_boxes['crop_rgb'][:, round(nucleus_boxes['crop_rgb'].shape[1] / 2), :].copy()
         overlay_zy = ImageHandler.transform_rgb_img(
-            nucleus['cropped_rgb_box'][:, :, round(nucleus['cropped_rgb_box'].shape[2] / 2)].copy())
-
-        # remove red channel
-        #overlay_xy[:, :, 0] = 0
-        #overlay_zx[:, :, 0] = 0
-        #overlay_zy[:, :, 0] = 0
-
-        #overlay_xy = np.ma.masked_where(nucleus_xy == 0.0, nucleus_xy)
-        #overlay_zx = np.ma.masked_where(nucleus_zx == 0.0, nucleus_zx)
-        #overlay_zy = np.ma.masked_where(nucleus_zy == 0.0, nucleus_zy)
+            nucleus_boxes['crop_rgb'][:, :, round(nucleus_boxes['crop_rgb'].shape[2] / 2)].copy())
 
         # xy image
         ax_xy = fig.add_subplot(111)
@@ -463,42 +456,35 @@ class Plot:
                      alpha=cfg.nucleus_select_corr_nuclei_overlay_alpha)
         ax_zy.set_xlim([0, stack_boxes.lamin.shape[0]])
 
-        print('\nParams for %i' % nucleus['nID'])
-        #for param in nucleus[]:
-        #    print('\t%s: %0.2f' % (param, nucleus[param.lower()]))
-        print('lamin %.2f' % (nucleus['donut_lamin']))
-        print('dapi %.2f' % (nucleus['donut_dapi']))
-        print('membrane %.2f' % (nucleus['donut_membrane']))
-        print('ratio %.2f' % (nucleus['donut_ratio']))
-
         return stack_boxes
 
     @staticmethod
-    def get_nucleus_box(nucleus, img_stack, offset, img_type='uint8'):
+    def get_nucleus_box(nucleus_centroids, nucleus_areas, img_stack, offset, img_type='uint8'):
         """
         Calculate box around the nucleus
 
-        :param nucleus:
+        :param nucleus_centroids:
+        :param nucleus_areas:
         :param img_stack:
         :param offset:
         :return:
         """
         # get the middle centroid
-        nucleus_middle = round((nucleus['centroid'][-1][0] - nucleus['centroid'][0][0])/2)
+        nucleus_middle = round((nucleus_centroids[-1][0] - nucleus_centroids[0][0])/2)
 
         # crop the lamin image around the centroid depending on the area plus a certain value
-        radius = round(math.sqrt(nucleus['area'][nucleus_middle][1]/math.pi) + offset)
+        radius = round(math.sqrt(nucleus_areas[int(nucleus_middle)][1]/math.pi) + offset)
 
         # calculate box parameters
-        z = (nucleus['centroid'][0][0] - offset,
-             nucleus['centroid'][-1][0] + offset)
-        row = (round(nucleus['centroid'][nucleus_middle][1][0])
-               - radius, round(nucleus['centroid'][nucleus_middle][1][0]) + radius)
-        col = (round(nucleus['centroid'][nucleus_middle][1][1])
-               - radius, round(nucleus['centroid'][nucleus_middle][1][1]) + radius)
+        z = (nucleus_centroids[0][0] - offset,
+             nucleus_centroids[-1][0] + offset)
+        row = (round(nucleus_centroids[int(nucleus_middle), 1])
+               - radius, round(nucleus_centroids[int(nucleus_middle), 1]) + radius)
+        col = (round(nucleus_centroids[int(nucleus_middle), 2])
+               - radius, round(nucleus_centroids[int(nucleus_middle), 2]) + radius)
 
         # adjust for negative values
-        z = [0 if i < 0 else i for i in z]
+        z = [0 if i < 0 else int(i) for i in z]
         row = [0 if i < 0 else int(i) for i in row]
         col = [0 if i < 0 else int(i) for i in col]
 
@@ -508,11 +494,11 @@ class Plot:
         return box_stack.astype(img_type)
 
     @staticmethod
-    def get_nucleus_boxes(nucleus, stacks, reload=False):
+    def get_nucleus_boxes(nucleus_boxes, nucleus_centroids, nucleus_areas, stacks, reload=False):
         """
         Calculate boxes for nucleus
 
-        :param nucleus:
+        :param nucleus_boxes
         :param stacks:
         :return:
         """
@@ -520,13 +506,16 @@ class Plot:
 
         # get boxes for the stacks
         if reload is True:
-            stack_boxes.lamin = Plot.get_nucleus_box(nucleus, stacks.lamin, cfg.nucleus_box_offset)
-            stack_boxes.labels = Plot.get_nucleus_box(nucleus, stacks.labels, cfg.nucleus_box_offset)
-            stack_boxes.nuclei = Plot.get_nucleus_box(nucleus, stacks.nuclei, cfg.nucleus_box_offset)
+            stack_boxes.lamin = Plot.get_nucleus_box(
+                nucleus_centroids, nucleus_areas, stacks.lamin, cfg.nucleus_box_offset)
+            stack_boxes.labels = Plot.get_nucleus_box(
+                nucleus_centroids, nucleus_areas, stacks.labels, cfg.nucleus_box_offset)
+            stack_boxes.nuclei = Plot.get_nucleus_box(
+                nucleus_centroids, nucleus_areas, stacks.nuclei, cfg.nucleus_box_offset)
         else:
-            stack_boxes.lamin = nucleus['lamin_box']
-            stack_boxes.labels = nucleus['labels_box']
-            stack_boxes.nuclei = nucleus['box']
+            stack_boxes.lamin = nucleus_boxes['lamin']
+            stack_boxes.labels = nucleus_boxes['labels']
+            stack_boxes.nuclei = nucleus_boxes['bw']
 
         # make all nuclei highest value
         #stack_boxes.nuclei[stack_boxes.nuclei > 0] = 255
