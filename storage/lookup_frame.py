@@ -455,7 +455,7 @@ class LookupFrame:
         """
         self.data_frame = pd.read_csv(path, sep=cfg.CSV_DEL, index_col=0)
 
-    def sort_by_col(self, col, asc=[True], sort_by_nID=False):
+    def sort_by_col(self, col, asc=[True], sort_by_nID=False, inplace=True):
         """
         Sort values by column
 
@@ -473,10 +473,15 @@ class LookupFrame:
             asc.insert(0, True)
 
             self.add_col_from_index()
-            self.data_frame = self.data_frame.sort_values(col, ascending=asc)
+            new_df = self.data_frame.sort_values(col, ascending=asc)
             self.del_col_from_index()
         else:
-            self.data_frame = self.data_frame.sort_values(col, ascending=asc)
+            new_df = self.data_frame.sort_values(col, ascending=asc)
+
+        if inplace is True:
+            self.data_frame = new_df
+
+        return new_df
 
     def add_col_from_index(self):
         """

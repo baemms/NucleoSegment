@@ -40,7 +40,7 @@ plt.rcParams.update(params)
 infos = ImageHandler.load_image_infos()
 
 # select a specific info
-selected_info_ID = 'N1-19-9'
+selected_info_ID = 'N1-19-23'
 #selected_info_ID = None
 selected_info = None
 

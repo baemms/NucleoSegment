@@ -9,6 +9,7 @@ from PyQt4 import QtGui, QtCore
 import threading
 
 import numpy as np
+import random as rdm
 
 # matplot for Qt
 from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
@@ -36,6 +37,7 @@ class NucleoSelect(QtGui.QDialog):
 
     RBG_MODE = ['SEL', 'ADD', 'DEL']
     RBG_TOOL = ['POINT', 'BRUSH']
+    RBG_COLOUR = ['RND', 'VOL']
     RBG_LAYER = ['NUCLEI', 'NONUC', 'FILA', 'FILTERED', 'ADDED', 'LABELS', 'OVERLAP', 'REMERGED']
 
     def __init__(self, image_info, parent=None):
@@ -64,8 +66,10 @@ class NucleoSelect(QtGui.QDialog):
         self.draw_nuclei_z = int(self.segmentation.stacks.lamin.shape[0] / 2)
         self.draw_nuclei_mode = 0
         self.draw_nuclei_tool = 0
+        self.draw_nuclei_colour = 0
         self.draw_nuclei_layer = 0
         self.draw_nuclei_cur_layer = self.segmentation.stacks.nuclei
+        self.nuclei_colour = 0
 
         # set specific mode parameters
         self.draw_nuclei_del_size = 20
@@ -715,7 +719,8 @@ class NucleoSelect(QtGui.QDialog):
         # add radio button groups
         container.addLayout(self.prep_ctn_draw_nuclei_rbg('mode'), 0, 0)
         container.addLayout(self.prep_ctn_draw_nuclei_rbg('tool'), 1, 0)
-        container.addLayout(self.prep_ctn_draw_nuclei_rbg('layer'), 2, 0)
+        container.addLayout(self.prep_ctn_draw_nuclei_rbg('colour'), 2, 0)
+        container.addLayout(self.prep_ctn_draw_nuclei_rbg('layer'), 3, 0)
 
         return container
 
@@ -778,6 +783,38 @@ class NucleoSelect(QtGui.QDialog):
 
         :return:
         """
+        # was the colour changed?
+        if self.nuclei_colour != self.draw_nuclei_colour:
+            if self.draw_nuclei_colour == self.RBG_COLOUR.index('RND'):
+                # update with random numbers
+                for nID in self.segmentation.nuclei.get_nIDs():
+                    self.segmentation.nuclei.set_nucleus_colour(nID, rdm.randrange(0, 255))
+            elif self.draw_nuclei_colour == self.RBG_COLOUR.index('VOL'):
+                # get maximum volume
+                self.segmentation.nuclei.sort_nuclei('volume')
+
+                # get sorted list
+                sorted_params = self.segmentation.nuclei.get_param_list_from_nuclei('volume', only_accepted=True)
+                max_vol = sorted_params[-1]
+
+                # update relative to maximum volume
+                for nID in self.segmentation.nuclei.get_nIDs(only_accepted=True):
+                    # get volume
+                    vol = self.nuclei.get_param('volume', nID)
+                    colour = int(vol/max_vol * 255)
+                    #colour = 1
+
+                    print('TEST COL BEF', self.nuclei.get_nucleus_colour(nID))
+
+                    self.nuclei.set_nucleus_colour(colour, nID)
+
+                    print('TEST COL AFT', self.nuclei.get_nucleus_colour(nID))
+
+            self.nuclei_colour = self.draw_nuclei_colour
+
+            # redraw nuclei
+            self.segmentation.update(save=False, calc_nuclei_params=False)
+
         self.draw_nuclei_cur_layer = self.segmentation.stacks.nuclei
 
         if self.draw_nuclei_layer == self.RBG_LAYER.index('NONUC'):
@@ -1149,8 +1186,13 @@ class NucleoSelect(QtGui.QDialog):
         lamin_img = Plot.prepare_output(lamin_img, self.segmentation.stacks.lamin[self.draw_nuclei_z],
                                         cmap='gray', zoom=self.draw_nuclei_zoom)
         if layer is not None:
+            cmap = 'Dark2'
+
+            if self.draw_nuclei_colour == self.RBG_COLOUR.index('VOL'):
+                cmap = 'coolwarm'
+
             layer_img = Plot.prepare_output(layer_img, layer[self.draw_nuclei_z],
-                                            cmap='Dark2', zoom=self.draw_nuclei_zoom)
+                                            cmap=cmap, zoom=self.draw_nuclei_zoom)
 
         # clear figure
         self.fig_draw_nuclei.clear()

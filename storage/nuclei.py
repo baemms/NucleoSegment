@@ -237,6 +237,9 @@ class Nuclei:
                 print('delete bottom (%i - %i)' % (corr_stop, nucleus_stop))
                 self.segmentation.delete_nucleus_part(nID, corr_stop, nucleus_stop)
 
+            # reorder z parameters
+            self.sort_vals_by_z()
+
             nucleus_coords = self.get_nucleus_coords(nID)
             nucleus_start = nucleus_coords[0, 0]
             nucleus_stop = nucleus_coords[-1, 0]
@@ -248,6 +251,10 @@ class Nuclei:
 
             # recalculate params
             self.calc_nucleus_params(nID)
+
+            print('TEST save nuclei')
+            params_path = self.segmentation.get_results_dir().nuclei_params_corr
+            self.save(params_path)
 
     def filter_nuclei(self):
         """
@@ -939,9 +946,11 @@ class Nuclei:
 
         # go through nuclei
         if nIDs is None:
+            print('\tget nIDs')
             nIDs = self.get_nIDs(only_accepted=only_accepted)
 
         # get coords
+        print('\tget coords')
         nuc_coords = self.get_nucleus_coords(nIDs)
 
         if nuc_coords is not None:
@@ -1362,15 +1371,16 @@ class Nuclei:
             # save projections
             self.save(dirs.nuclei_params_raw, projections_only=True)
 
-    def sort_nuclei(self, col='nID', asc=True):
+    def sort_nuclei(self, col='nID', asc=True, inplace=True):
         """
         Sort nuclei by param
 
         :param col:
         :param asc:
+        :param inplace:
         :return:
         """
-        self.data_frames['data_params'].sort_by_col(col, asc=asc)
+        return self.data_frames['data_params'].sort_by_col(col, asc=asc, inplace=inplace)
 
     def get_nID_from_sID(self, sID, only_accepted=False):
         """

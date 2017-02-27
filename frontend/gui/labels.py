@@ -38,6 +38,10 @@ rb_draw_nuclei_tool = labels['nucleus_edit']['RB_DRAW_NUCLEI_TOOL']
 rb_draw_nuclei_tool_point = labels['nucleus_edit']['RB_DRAW_NUCLEI_TOOL_POINT']
 rb_draw_nuclei_tool_brush = labels['nucleus_edit']['RB_DRAW_NUCLEI_TOOL_BRUSH']
 
+rb_draw_nuclei_colour = labels['nucleus_edit']['RB_DRAW_NUCLEI_COLOUR']
+rb_draw_nuclei_colour_rnd = labels['nucleus_edit']['RB_DRAW_NUCLEI_COLOUR_RND']
+rb_draw_nuclei_colour_vol = labels['nucleus_edit']['RB_DRAW_NUCLEI_COLOUR_VOL']
+
 rb_draw_nuclei_layer = labels['nucleus_edit']['RB_DRAW_NUCLEI_LAYER']
 rb_draw_nuclei_layer_nuclei = labels['nucleus_edit']['RB_DRAW_NUCLEI_LAYER_NUCLEI']
 rb_draw_nuclei_layer_nonuc = labels['nucleus_edit']['RB_DRAW_NUCLEI_LAYER_NONUC']

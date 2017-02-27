@@ -243,6 +243,10 @@ class Correction:
             mod_lID = -1
             if corr_list is not None:
                 for lID, cur_nID in enumerate(corr_list):
+                    # multiple value field?
+                    if type(cur_nID) is tuple:
+                        cur_nID = cur_nID[0]
+
                     if cur_nID == nID:
                         mod_lID = lID
                         break
@@ -352,8 +356,8 @@ class Correction:
 
         :return:
         """
-        print('TEST UNCOMMENT')
 
+        print('TEST UNCOMMEND')
         # create nuclei and stacks
         #self.stacks.nonuc = self.update_correction_stack('nonuc')
         #self.stacks.fila = self.update_correction_stack('fila')
