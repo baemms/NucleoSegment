@@ -21,3 +21,4 @@ MAX;Maxima;size
 BLOBS;DetectBlobs;size
 SHOW;Dummy;interval;start;stop;step
 ORI;Dummy
+FILL;FillHoles

@@ -7,6 +7,7 @@ from PyQt4 import QtGui, QtCore
 
 # threading for nucleus planes
 import threading
+import math
 
 import numpy as np
 import random as rdm
@@ -23,6 +24,7 @@ from frontend.figures.plot import Plot
 import frontend.gui.labels as gui_labels
 from processing.segmentation import Segmentation
 from processing.correction import Correction
+from storage.image import ImageHandler
 
 import storage.config as cfg
 import frontend.figures.thread as plot_thread
@@ -34,10 +36,11 @@ class NucleoSelect(QtGui.QDialog):
     TB_SEL_NON_NUCLEI = 1
     TB_SEL_CORR_NUCLEI = 2
     TB_CORR_NUCLEI = 3
+    TB_PARAM_RANGE = 4
 
     RBG_MODE = ['SEL', 'ADD', 'DEL']
     RBG_TOOL = ['POINT', 'BRUSH']
-    RBG_COLOUR = ['RND', 'VOL']
+    RBG_COLOUR = ['RND', 'VOL', 'VDR', 'DEP', 'SAV', 'DIST', 'APD']
     RBG_LAYER = ['NUCLEI', 'NONUC', 'FILA', 'FILTERED', 'ADDED', 'LABELS', 'OVERLAP', 'REMERGED']
 
     def __init__(self, image_info, parent=None):
@@ -221,11 +224,13 @@ class NucleoSelect(QtGui.QDialog):
         self.tb_select_non_nuclei = QtGui.QWidget()
         self.tb_select_corr_nuclei = QtGui.QWidget()
         self.tb_correct_nuclei = QtGui.QWidget()
+        self.tb_param_range = QtGui.QWidget()
 
         self.tb_draw_nuclei.setLayout(self.prep_ctn_draw_nuclei())
         self.tb_select_non_nuclei.setLayout(self.prep_ctn_select_non_nuclei())
         self.tb_select_corr_nuclei.setLayout(self.prep_ctn_select_corr_nuclei())
         self.tb_correct_nuclei.setLayout(self.prep_ctn_correct_nuclei())
+        self.tb_param_range.setLayout(self.prep_ctn_param_range())
 
         # add tabs
         self.tbs_selection = QtGui.QTabWidget()
@@ -234,6 +239,7 @@ class NucleoSelect(QtGui.QDialog):
         self.tbs_selection.addTab(self.tb_select_non_nuclei, gui_labels.tb_sel_non_nuclei)
         self.tbs_selection.addTab(self.tb_select_corr_nuclei, gui_labels.tb_sel_corr_nuclei)
         self.tbs_selection.addTab(self.tb_correct_nuclei, gui_labels.tb_correct_nuclei)
+        self.tbs_selection.addTab(self.tb_param_range, gui_labels.tb_param_range)
 
         self.tbs_selection.currentChanged.connect(self.change_nuclei_edt)
 
@@ -363,6 +369,187 @@ class NucleoSelect(QtGui.QDialog):
         container.addWidget(self.btn_move_criteria_examples_up, 5, 3)
 
         return container
+
+    def prep_ctn_param_range(self):
+        """
+        Container to choose param ranges
+
+        :return:
+        """
+        params = cfg.param_range_params
+
+        # dicts for display
+        self.fig_nuclei_param_range = dict()
+        self.cnv_nuclei_param_range = dict()
+        self.edt_nuclei_param_range_min = dict()
+        self.edt_nuclei_param_range_max = dict()
+
+        # build container
+        container = QtGui.QGridLayout()
+
+        # build param histograms and choice
+        rows = 0
+        for row, param in enumerate(params):
+            container.addLayout(self.prep_ctn_param_range_select(param), row, 0, 1, 4)
+
+            rows += 1
+
+        # buttons for saving settings and stacks
+        self.btn_save_param_ranges = QtGui.QPushButton(gui_labels.btn_save)
+        self.btn_save_param_stacks = QtGui.QPushButton(gui_labels.btn_save_stacks)
+        self.btn_reset_param_ranges = QtGui.QPushButton(gui_labels.btn_reset)
+
+        self.btn_save_param_ranges.clicked.connect(self.save_param_ranges)
+        self.btn_save_param_stacks.clicked.connect(self.save_param_stacks)
+        self.btn_reset_param_ranges.clicked.connect(self.reset_nuclei_param_ranges)
+
+        container.addWidget(self.btn_reset_param_ranges, rows, 0)
+        container.addWidget(self.btn_save_param_ranges, rows, 1)
+        container.addWidget(self.btn_save_param_stacks, rows, 2)
+
+        return container
+
+    def save_param_ranges(self):
+        """
+        Save param ranges to csv
+
+        :return:
+        """
+
+        rows = list()
+        rows.append(self.image_info['ID'])
+
+        # go through min/max ranges
+        for param in cfg.param_range_params:
+            # get min
+            rows.append(float(self.edt_nuclei_param_range_min[param].text()))
+
+            # get max
+            rows.append(float(self.edt_nuclei_param_range_max[param].text()))
+
+        ImageHandler.update_exp_csv(self.segmentation.image_info['ID'],
+                                    cfg.file_nuclei_param_ranges,
+                                    rows)
+
+    def save_param_stacks(self):
+        """
+        Save stacks for params
+
+        :return:
+        """
+
+        # get directories
+        result_dirs = self.segmentation.get_results_dir()
+
+        for param in cfg.param_range_params:
+            # assign values to nuclei
+            self.assign_param_vals_to_nuclei(param)
+
+            # generate stack
+            self.segmentation.update(save=False, calc_nuclei_params=False)
+
+            # save stack
+            ImageHandler.save_stack_as_tiff(self.segmentation.stacks.nuclei,
+                                            result_dirs.stacks_corr + param + '.tif')
+
+    def assign_param_vals_to_nuclei(self, param):
+        """
+        Assign relative param values to nuclei
+
+        :param param:
+        :return:
+        """
+        #sorted_params = self.segmentation.nuclei.get_param_list_from_nuclei(param, only_accepted=True, sort_by=param)
+        #min_val = sorted_params[0]
+        #max_val = sorted_params[-1]
+
+        # get param ranges from pane
+        min_val = float(self.edt_nuclei_param_range_min[param].text())
+        max_val = float(self.edt_nuclei_param_range_max[param].text())
+
+        # update relative to maximum
+        for nID in self.segmentation.nuclei.get_nIDs(only_accepted=True):
+            val = self.nuclei.get_param(param, nID)
+
+            if math.isnan(val) is False:
+                colour = int((val - min_val)/(max_val - min_val) * 255)
+
+                self.nuclei.set_nucleus_colour(colour, nID)
+
+    def prep_ctn_param_range_select(self, param):
+        """
+        Prepare container to select param range
+
+        :param param:
+        :return:
+        """
+        self.fig_nuclei_param_range[param] = plt.figure(figsize=(8, 3))
+        self.cnv_nuclei_param_range[param] = FigureCanvas(self.fig_nuclei_param_range[param])
+
+        # get sorted list
+        sorted_params = self.segmentation.nuclei.get_param_list_from_nuclei(param, only_accepted=True, sort_by=param)
+
+        # show histogram
+        Plot.view_histogram_of_value_list(self.fig_nuclei_param_range[param],
+                                          sorted_params,
+                                          cfg.criteria_select_hist_bins)
+
+        # draw canvas
+        self.cnv_nuclei_param_range[param].draw()
+
+        # build container
+        container = QtGui.QGridLayout()
+
+        # histogram
+        container.addWidget(self.cnv_nuclei_param_range[param], 0, 0, 3, 1)
+        container.addWidget(QtGui.QLabel(param), 3, 0, 1, 1)
+
+        # range selection
+        self.edt_nuclei_param_range_min[param] = QtGui.QLineEdit()
+        self.edt_nuclei_param_range_max[param] = QtGui.QLineEdit()
+
+        container.addWidget(QtGui.QLabel(gui_labels.label_min), 0, 2)
+        container.addWidget(QtGui.QLabel(gui_labels.label_max), 1, 2)
+
+        container.addWidget(self.edt_nuclei_param_range_min[param], 0, 3)
+        container.addWidget(self.edt_nuclei_param_range_max[param], 1, 3)
+
+        # get param vals from config
+        param_vals = ImageHandler.get_exp_csv(self.segmentation.image_info['ID'],
+                                              cfg.file_nuclei_param_ranges)
+        if param_vals is not None:
+            # get place of param in list
+            param_index = cfg.param_range_params.index(param)
+
+            min_val = param_vals[param_index*2]
+            max_val = param_vals[param_index*2 + 1]
+        else:
+            min_val = sorted_params[0]
+            max_val = sorted_params[-1]
+
+        # get from params
+        self.edt_nuclei_param_range_min[param].setText(str(min_val))
+        self.edt_nuclei_param_range_max[param].setText(str(max_val))
+
+        return container
+
+    def reset_nuclei_param_ranges(self):
+        """
+        Reset param ranges
+
+        :return:
+        """
+
+        for param in cfg.param_range_params:
+            # sort params
+            sorted_params = self.segmentation.nuclei.get_param_list_from_nuclei(param, only_accepted=True, sort_by=param)
+
+            min_val = sorted_params[0]
+            max_val = sorted_params[-1]
+
+            # get from params
+            self.edt_nuclei_param_range_min[param].setText(str(min_val))
+            self.edt_nuclei_param_range_max[param].setText(str(max_val))
 
     def sort_nuclei_examples(self, criteria):
         """
@@ -789,26 +976,21 @@ class NucleoSelect(QtGui.QDialog):
                 # update with random numbers
                 for nID in self.segmentation.nuclei.get_nIDs():
                     self.segmentation.nuclei.set_nucleus_colour(nID, rdm.randrange(0, 255))
-            elif self.draw_nuclei_colour == self.RBG_COLOUR.index('VOL'):
-                # get maximum volume
-                self.segmentation.nuclei.sort_nuclei('volume')
+            else:
+                if self.draw_nuclei_colour == self.RBG_COLOUR.index('VOL'):
+                    param = 'volume'
+                elif self.draw_nuclei_colour == self.RBG_COLOUR.index('VDR'):
+                    param = 'volume_depth_ratio'
+                elif self.draw_nuclei_colour == self.RBG_COLOUR.index('DEP'):
+                    param = 'depth'
+                elif self.draw_nuclei_colour == self.RBG_COLOUR.index('SAV'):
+                    param = 'surface_volume_ratio'
+                elif self.draw_nuclei_colour == self.RBG_COLOUR.index('DIST'):
+                    param = 'neighbours_distance'
+                elif self.draw_nuclei_colour == self.RBG_COLOUR.index('APD'):
+                    param = 'apical_dist'
 
-                # get sorted list
-                sorted_params = self.segmentation.nuclei.get_param_list_from_nuclei('volume', only_accepted=True)
-                max_vol = sorted_params[-1]
-
-                # update relative to maximum volume
-                for nID in self.segmentation.nuclei.get_nIDs(only_accepted=True):
-                    # get volume
-                    vol = self.nuclei.get_param('volume', nID)
-                    colour = int(vol/max_vol * 255)
-                    #colour = 1
-
-                    print('TEST COL BEF', self.nuclei.get_nucleus_colour(nID))
-
-                    self.nuclei.set_nucleus_colour(colour, nID)
-
-                    print('TEST COL AFT', self.nuclei.get_nucleus_colour(nID))
+                self.assign_param_vals_to_nuclei(param)
 
             self.nuclei_colour = self.draw_nuclei_colour
 
@@ -1188,7 +1370,7 @@ class NucleoSelect(QtGui.QDialog):
         if layer is not None:
             cmap = 'Dark2'
 
-            if self.draw_nuclei_colour == self.RBG_COLOUR.index('VOL'):
+            if self.draw_nuclei_colour != self.RBG_COLOUR.index('RND'):
                 cmap = 'coolwarm'
 
             layer_img = Plot.prepare_output(layer_img, layer[self.draw_nuclei_z],
@@ -1594,7 +1776,8 @@ class NucleoSelect(QtGui.QDialog):
         self.correction.save_corrections()
 
         # apply corrections and do not save to disk
-        self.correction.apply_corrections(save=save)
+        #self.correction.apply_corrections(save=save)
+        self.segmentation.save()
 
         # reload drawing
         self.show_draw_nuclei()

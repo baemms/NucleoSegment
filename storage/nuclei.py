@@ -6,6 +6,7 @@ import numpy as np
 import random as rdm
 import pickle
 import os
+import math
 
 from processing.filter import Dilation, Equalise
 import threading
@@ -252,7 +253,6 @@ class Nuclei:
             # recalculate params
             self.calc_nucleus_params(nID)
 
-            print('TEST save nuclei')
             params_path = self.segmentation.get_results_dir().nuclei_params_corr
             self.save(params_path)
 
@@ -627,18 +627,34 @@ class Nuclei:
 
         return nIDs
 
-    def calc_nuclei_params(self):
+    def calc_nuclei_params(self, only_accepted=False, limit_to=-1, selected_nIDs=None):
         """
         Calculate params for nuclei
 
+        :param only_accepted:
+        :param limit_to:
         :return:
         """
         # threading parameters
         max_threads = cfg.merge_threads_nuc_params
-        nIDs = self.get_nIDs()
+
+        # filter for selected nIDs
+        if selected_nIDs is not None:
+            nIDs = selected_nIDs
+        else:
+            nIDs = self.get_nIDs(only_accepted=only_accepted)
+
+        # limit nIDs?
+        if limit_to > 0:
+            nIDs = nIDs[0:limit_to]
+
         nIDit = iter(nIDs)
 
         print('Calc nucleus params for %i' % len(nIDs))
+
+        # check if there is a membrane segmentation
+        if self.segmentation.has_membin() is False:
+            self.segmentation.create_membin()
 
         hasnext = True
 
@@ -749,11 +765,37 @@ class Nuclei:
         nucleus_surface = nucleus_top + nucleus_btm + nucleus_perimeter[1:-1, 1].sum()
 
         self.set_nucleus_surface(nucleus_surface, nID)
+        self.set_nucleus_surface_volume_ratio((nucleus_surface/nucleus_volume), nID)
 
-        # depth
-        nucleus_depth = nucleus_perimeter.shape[0]
+        # calculate nucleus depth based on plane by plane basis
+        nucleus_depth = 0
+
+        # go through centroids and calculate distance between them in 3D space
+        # with simple pythagoras
+        nucleus_centroids = self.get_nucleus_centroids(nID)
+
+        prev_z = -1
+        prev_y = -1
+        prev_x = -1
+
+        for centroid in nucleus_centroids:
+            # set current information
+            cur_z = centroid[0]
+            cur_y = centroid[1]
+            cur_x = centroid[2]
+
+            # do the calculation
+            if prev_z >= 0 and prev_y >= 0 and prev_x >= 0:
+                nucleus_depth += self.calc_3D_distance(np.array([cur_z, cur_y, cur_x]),
+                                                       np.array([prev_z, prev_y, prev_x]))
+
+            # set as previous infor for next iteration
+            prev_z = cur_z
+            prev_y = cur_y
+            prev_x = cur_x
 
         self.set_nucleus_depth(nucleus_depth, nID)
+        self.set_nucleus_volume_depth_ratio((nucleus_volume/nucleus_depth), nID)
 
         # create box
         self.build_nucleus_boxes(nID)
@@ -784,22 +826,20 @@ class Nuclei:
         self.set_nucleus_membrane_int(membrane_mean, nID)
 
         # centre of nucleus by taking the average of centroids
-        nucleus_centroids = self.get_nucleus_centroids(nID)
-
         # take average
-        avg_centroid = [
+        nucleus_centre = np.array([
             nucleus_centroids[int(len(nucleus_centroids)/2)][0],
             int(sum(nucleus_centroids[:, 1]) / len(nucleus_centroids[:, 1])),
             int(sum(nucleus_centroids[:, 2]) / len(nucleus_centroids[:, 2]))
-        ]
+        ])
 
-        self.set_nucleus_centre(np.array([avg_centroid]), nID, force_add=True)
+        self.set_nucleus_centre(nucleus_centre, nID)
 
         # calculate distance to image borders
         edge_distances = [
-            avg_centroid[0], nucleus_stack.shape[0] - avg_centroid[0],
-            avg_centroid[1], nucleus_stack.shape[1] - avg_centroid[1],
-            avg_centroid[2], nucleus_stack.shape[2] - avg_centroid[2]
+            nucleus_centre[0], nucleus_stack.shape[0] - nucleus_centre[0],
+            nucleus_centre[1], nucleus_stack.shape[1] - nucleus_centre[1],
+            nucleus_centre[2], nucleus_stack.shape[2] - nucleus_centre[2]
         ]
 
         self.set_classifier_edge_dist(min(edge_distances), nID)
@@ -824,19 +864,250 @@ class Nuclei:
         #     nucleus[key] = donut_props[key]
 
         # calc nucleus box
-        # nucleus_coords = self.get_nucleus_coords(nID)
-        # nucleus_bboxes = self.get_nucleus_bboxes(nID)
-        # nucleus_bbox = [
-        #     nucleus_coords[0, 0],
-        #     min(nucleus_bboxes[:, 1]),
-        #     min(nucleus_bboxes[:, 2]),
-        #     nucleus_coords[-1, 0],
-        #     max(nucleus_bboxes[:, 3]),
-        #     max(nucleus_bboxes[:, 4])
-        # ]
+        nucleus_coords = self.get_nucleus_coords(nID)
+        nucleus_bboxes = self.get_nucleus_bboxes(nID)
+        nucleus_bbox = np.array([
+            nucleus_coords[0, 0],
+            min(nucleus_bboxes[:, 1]),
+            min(nucleus_bboxes[:, 2]),
+            nucleus_coords[-1, 0],
+            max(nucleus_bboxes[:, 3]),
+            max(nucleus_bboxes[:, 4])
+        ])
 
-        # TODO adding this sets all other values to NaN
-        #self.set_classifier_nuc_bbox(np.array(nucleus_bbox), nID)
+        self.set_nucleus_bbox(nucleus_bbox, nID)
+
+        # get neighbouring nuclei
+        neighbour_nIDs = self.get_nID_by_pos_range(
+            self.get_expanded_bbox_for_nucleus(nID, only_horizontal=True), only_accepted=True)
+
+        # count neighbouring nuclei - minus the nucleus itself
+        self.set_nucleus_neighbours((len(neighbour_nIDs) - 1), nID)
+
+        # calculate average distance to neighbouring nuclei
+        neighbours_distances = list()
+        for neighbour_nID in neighbour_nIDs:
+            if neighbour_nID != nID:
+                # calc distance
+                neighbour_centre = self.get_nucleus_centre(neighbour_nID)
+
+                neighbours_distances.append(
+                    self.calc_3D_distance(nucleus_centre, neighbour_centre)
+                )
+
+        avg_distance = sum(neighbours_distances)/len(neighbours_distances)
+
+        self.set_nucleus_neighbours_distance(avg_distance, nID)
+
+        # calculate direction vector of nucleus
+        vec_top = nucleus_centroids[0]
+        vec_bottom = nucleus_centroids[-1]
+
+        vec_direction = (
+            vec_top[0] - vec_bottom[0],
+            vec_top[1] - vec_bottom[1],
+            vec_top[2] - vec_bottom[2]
+        )
+
+        # adjust vector to z and prepare for saving
+        vec_direction = np.array([
+            vec_direction[0]/vec_direction[0],
+            vec_direction[1]/vec_direction[0],
+            vec_direction[2]/vec_direction[0]
+        ])
+
+        self.set_nucleus_direction(vec_direction, nID)
+
+        # calculate apical distance
+        # go from nucleus centre up and check if there is still a membrane signal
+        is_in_membrane_dim = True
+        cur_rel_z = 0
+        next_pos = nucleus_centre
+        last_pos_on_membrane = None
+
+        # for counting nuclei_in_direction
+        nuclei_in_direction_list = list()
+
+        while is_in_membrane_dim is True:
+            # is point on membrane signal?
+            if self.segmentation.stacks.membin[next_pos[0], next_pos[1], next_pos[2]] > 0:
+                last_pos_on_membrane = next_pos
+
+            # get the nucleus at this position
+            nID_at_pos = self.get_nID_by_pos(next_pos)
+            if nID_at_pos is not None:
+                nuclei_in_direction_list.append(nID_at_pos)
+
+            # calculate next position
+            cur_rel_z += 1
+
+            next_pos = (
+                int(nucleus_centre[0] - (cur_rel_z * vec_direction[0])),
+                int(nucleus_centre[1] - (cur_rel_z * vec_direction[1])),
+                int(nucleus_centre[2] - (cur_rel_z * vec_direction[2]))
+            )
+
+            # test if next point is in membrane dimensions
+            for i in range(3):
+                if next_pos[i] < 0 or next_pos[i] >= self.segmentation.stacks.membin.shape[i]:
+                    is_in_membrane_dim = False
+
+        # calculate distance to last position and nucleus centre
+        apical_distance = self.calc_3D_distance(nucleus_centre, last_pos_on_membrane)
+
+        self.set_nucleus_apical_distance(apical_distance, nID)
+
+        # delete yourself and get unique list of nuclei in direction and count
+        nuclei_in_direction_list.remove(nID)
+        nuclei_in_direction_count = len(set(nuclei_in_direction_list))
+
+        self.set_nucleus_nuclei_in_direction(nuclei_in_direction_count, nID)
+
+        # calculate ellipsoid for nucleus
+        # rotate direction vector 90DEG around X
+        vec_direction_orth = self.segmentation.rot_vector(vec_direction, 90, 2)
+
+        # rotate orthogonal vector 180DEG around Z and get the last
+        # points on the nucleus and calculate the distance between them
+        diameters = list()
+        dia_points = list()
+
+        # add nucleus to stack
+        #nucleus_on_stack = self.add_nucleus_to_stack(nID, np.zeros_like(self.segmentation.stacks.lamin),
+        #                                             nucleus_value=1)
+
+        for cur_rot in range(cfg.nucleus_calc_elps_rot, 181, cfg.nucleus_calc_elps_rot):
+            # roate vector
+            vec_direction_orth_rot = self.segmentation.rot_vector(vec_direction_orth, cur_rot, 0)
+
+            # get last point in +/- direction
+            cur_dist = 0
+            last_plus_pos = None
+            last_minus_pos = None
+
+            next_pos = nucleus_centre
+
+            # is the position on the nucleus?
+            while self.get_nID_by_pos(next_pos) == nID:
+            #while nucleus_on_stack[next_pos[0], next_pos[1], next_pos[2]] > 0:
+                last_plus_pos = next_pos
+
+                # calculate next position
+                cur_dist += 1
+
+                next_pos = (
+                    int(nucleus_centre[0] + (cur_dist * vec_direction_orth_rot[0])),
+                    int(nucleus_centre[1] + (cur_dist * vec_direction_orth_rot[1])),
+                    int(nucleus_centre[2] + (cur_dist * vec_direction_orth_rot[2]))
+                )
+
+            cur_dist = 0
+            next_pos = nucleus_centre
+
+            # is the position on the nucleus?
+            while self.get_nID_by_pos(next_pos) == nID:
+                last_minus_pos = next_pos
+
+                # calculate next position
+                cur_dist += 1
+
+                next_pos = (
+                    int(nucleus_centre[0] - (cur_dist * vec_direction_orth_rot[0])),
+                    int(nucleus_centre[1] - (cur_dist * vec_direction_orth_rot[1])),
+                    int(nucleus_centre[2] - (cur_dist * vec_direction_orth_rot[2]))
+                )
+
+            # calculate distance
+            if last_plus_pos is not None and last_minus_pos is not None:
+                diameter = self.calc_3D_distance(last_plus_pos, last_minus_pos)
+
+                diameters.append(diameter)
+                dia_points.append((last_plus_pos, last_minus_pos))
+
+        # get min and max from radii
+        min_diameter = min(diameters)
+        max_diameter = max(diameters)
+
+        min_index = diameters.index(min_diameter)
+        max_index = diameters.index(max_diameter)
+
+        # get vectors
+        if dia_points[min_index][0][1] < dia_points[min_index][1][1]:
+            vec_min = np.array([
+                (dia_points[min_index][1][0] - dia_points[min_index][0][0]),
+                (dia_points[min_index][1][1] - dia_points[min_index][0][1]),
+                (dia_points[min_index][1][2] - dia_points[min_index][0][2])
+            ])
+        else:
+            vec_min = np.array([
+                (dia_points[min_index][0][0] - dia_points[min_index][1][0]),
+                (dia_points[min_index][0][1] - dia_points[min_index][1][1]),
+                (dia_points[min_index][0][2] - dia_points[min_index][1][2])
+            ])
+
+        if dia_points[max_index][0][1] < dia_points[max_index][1][1]:
+            vec_max = np.array([
+                (dia_points[max_index][1][0] - dia_points[max_index][0][0]),
+                (dia_points[max_index][1][1] - dia_points[max_index][0][1]),
+                (dia_points[max_index][1][2] - dia_points[max_index][0][2])
+            ])
+        else:
+            vec_max = np.array([
+                (dia_points[max_index][0][0] - dia_points[max_index][1][0]),
+                (dia_points[max_index][0][1] - dia_points[max_index][1][1]),
+                (dia_points[max_index][0][2] - dia_points[max_index][1][2])
+            ])
+
+        # calculate volumes of min and max ellipsoid
+        elps_vol = (4/3) * math.pi * (nucleus_depth/2) * (min_diameter/2) * (max_diameter/2)
+
+        # set major and minor axis
+        self.set_nucleus_major_axis(max_diameter, nID)
+        self.set_nucleus_minor_axis(min_diameter, nID)
+        self.set_nucleus_mami_axis((max_diameter/min_diameter), nID)
+
+        # get orientations and add 90 to have values from 0 - 180
+        # the orientation function returns values from -90 to 90
+        direction_orientation = self.calc_orientation_of_vector(vec_direction) + 90
+        min_orientation = self.calc_orientation_of_vector(vec_min) + 90
+        max_orientation = self.calc_orientation_of_vector(vec_max) + 90
+
+        self.set_nucleus_direction_orientation(direction_orientation, nID)
+        self.set_nucleus_minor_axis_orientation(min_orientation, nID)
+        self.set_nucleus_major_axis_orientation(max_orientation, nID)
+
+    def calc_orientation_of_vector(self, array_vector, project_to=0):
+        """
+        Calculate orientation of array vector
+
+        :param project_to:
+        :return:
+        """
+
+        angle = None
+
+        if project_to == 0:
+            angle = math.degrees(math.atan(array_vector[2]/array_vector[1]))
+        elif project_to == 1:
+            angle = math.degrees(math.atan(array_vector[2]/array_vector[0]))
+        elif project_to == 2:
+            angle = math.degrees(math.atan(array_vector[1]/array_vector[0]))
+
+        return angle
+
+    def calc_3D_distance(self, p1, p2):
+        """
+        Calculate distance in 3D between two points
+
+        :param p1:
+        :param p2:
+        :return:
+        """
+        a = abs(int(p1[0]) - int(p2[0]))
+        b = abs(int(p1[1]) - int(p2[1]))
+        c = abs(int(p1[2]) - int(p2[2]))
+
+        return math.sqrt(a**2 + (math.sqrt(b**2 + c**2))**2)
 
     def create_projections(self, nID):
         """
@@ -1153,14 +1424,17 @@ class Nuclei:
         ].index.values)
 
         unique_nIDs = list(np.unique(nIDs))
+        ret_nIDs = list()
 
         # check for rejected nuclei
         if only_accepted is True:
             for nID in unique_nIDs:
-                if self.segmentation.nuclei.is_nucleus_rejected(nID):
-                    unique_nIDs.remove(nID)
+                if self.segmentation.nuclei.is_nucleus_rejected(nID) is False:
+                    ret_nIDs.append(nID)
+        else:
+            ret_nIDs = unique_nIDs
 
-        return unique_nIDs
+        return ret_nIDs
 
     def get_overlapping_nuclei(self, nucleus):
         """
@@ -1212,25 +1486,31 @@ class Nuclei:
 
         return overlapping_nuclei
 
-    def get_expanded_bbox_for_nucleus(self, nucleus):
+    def get_expanded_bbox_for_nucleus(self, nID, only_horizontal=False):
         """
         Return expanded bbox for nucleus
 
-        :param nucleus:
+        :param nID:
+        :param only_horizontal:
         :return:
         """
-        nuc_bbox = nucleus['nuc_bbox'].copy()
+        nuc_bbox = self.get_nucleus_bbox(nID)
 
         # add offset
         offset = cfg.nuclei_bbox_range
 
-        for i in range(0, 3):
+        if only_horizontal is True:
+            start_dim = 1
+        else:
+            start_dim = 0
+
+        for i in range(start_dim, 3):
             nuc_bbox[i] -= offset
 
             if nuc_bbox[i] < 0:
                 nuc_bbox[i] = 0
 
-        for i in range(3, 6):
+        for i in range(start_dim + 3, 6):
             nuc_bbox[i] += offset
 
             if nuc_bbox[i] >= self.segmentation.stacks.nuclei.shape[i - 3]:
@@ -1419,7 +1699,7 @@ class Nuclei:
     """
 
     def get_param_list_from_nuclei(self, col=None, data_frame='data_params', only_accepted=False,
-                                   create_dict=False):
+                                   create_dict=False, sort_by=None):
         """
         Get param from nucleus
 
@@ -1457,7 +1737,13 @@ class Nuclei:
             # del nID from frame
             self.data_frames[data_frame].del_col_from_index()
         else:
-            vals = self.data_frames[data_frame].get_vals_from_col(col, only_accepted=only_accepted)
+            if sort_by is not None:
+                sorted_frame = self.data_frames[data_frame].sort_by_col(col)
+                vals = self.data_frames[data_frame].get_vals_from_col(col, only_accepted=only_accepted,
+                                                                      data_frame=sorted_frame)
+
+            else:
+                vals = self.data_frames[data_frame].get_vals_from_col(col, only_accepted=only_accepted)
 
         return vals
 
@@ -1571,6 +1857,132 @@ class Nuclei:
         """
         return self.get_param_from_nucleus('data_params', 'depth', nID)
 
+    def get_nucleus_bbox(self, nID):
+        """
+        Get bbox of nucleus
+
+        :param nID:
+        :return:
+        """
+        return self.get_param_from_nucleus('data_params', 'nuc_bbox', nID)
+
+    def get_nucleus_volume_depth_ratio(self, nID):
+        """
+        Get volume depth ratio of nucleus
+
+        :param nID:
+        :return:
+        """
+        return self.get_param_from_nucleus('data_params', 'volume_depth_ratio', nID)
+
+    def get_nucleus_surface_volume_ratio(self, nID):
+        """
+        Get surface volume ratio of nucleus
+
+        :param nID:
+        :return:
+        """
+        return self.get_param_from_nucleus('data_params', 'surface_volume_ratio', nID)
+
+    def get_nucleus_neighbours(self, nID):
+        """
+        Get neighbours of nucleus
+
+        :param nID:
+        :return:
+        """
+        return self.get_param_from_nucleus('data_params', 'neighbours', nID)
+
+    def get_nucleus_neighbours_distance(self, nID):
+        """
+        Get neighbours distance of nucleus
+
+        :param nID:
+        :return:
+        """
+        return self.get_param_from_nucleus('data_params', 'neighbours_distance', nID)
+
+    def get_nucleus_direction(self, nID):
+        """
+        Get direction of nucleus
+
+        :param nID:
+        :return:
+        """
+        return self.get_param_from_nucleus('data_params', 'direction', nID)
+
+    def get_nucleus_apical_distance(self, nID):
+        """
+        Get apical distance of nucleus
+
+        :param nID:
+        :return:
+        """
+        return self.get_param_from_nucleus('data_params', 'apical_dist', nID)
+
+    def get_nucleus_nuclei_in_direction(self, nID):
+        """
+        Get nuclei in direction
+
+        :param nID:
+        :return:
+        """
+        return self.get_param_from_nucleus('data_params', 'nuclei_in_direction', nID)
+
+    def get_nucleus_minor_axis(self, nID):
+        """
+        Get minor axis of nucleus
+
+        :param nID:
+        :return:
+        """
+        return self.get_param_from_nucleus('data_params', 'minor_axis', nID)
+
+    def get_nucleus_major_axis(self, nID):
+        """
+        Get major axis of nucleus
+
+        :param nID:
+        :return:
+        """
+        return self.get_param_from_nucleus('data_params', 'major_axis', nID)
+
+    def get_nucleus_mami_axis(self, nID):
+        """
+        Get major/minor axis of nucleus
+
+        :param nID:
+        :return:
+        """
+        return self.get_param_from_nucleus('data_params', 'mami_axis', nID)
+
+    def get_nucleus_minor_axis_orientation(self, nID):
+        """
+        Get minor axis orientation of nucleus
+
+        :param nID:
+        :return:
+        """
+        return self.get_param_from_nucleus('data_params', 'minor_axis_orientation', nID)
+
+    def get_nucleus_major_axis_orientation(self, nID):
+        """
+        Get major axis orientation of nucleus
+
+        :param nID:
+        :return:
+        """
+        return self.get_param_from_nucleus('data_params', 'major_axis_orientation', nID)
+
+    def get_nucleus_direction_orientation(self, nID):
+        """
+        Get direction orientation of nucleus
+
+        :param nID:
+        :return:
+        """
+        return self.get_param_from_nucleus('data_params', 'direction_orientation', nID)
+
     def get_nucleus_lamin_int(self, nID):
         """
         Get lamin intensity of nucleus
@@ -1605,7 +2017,13 @@ class Nuclei:
         :param nID:
         :return:
         """
-        return self.get_param_from_nucleus('data_centre', ['z', 'y', 'x'], nID)
+        centre = self.get_param_from_nucleus('data_params', 'nuc_centre', nID)
+
+        if type(centre) is str:
+            # FIX: sometimes an array or a string is returned ... ?
+            centre = np.fromstring(centre[1:-1], sep=' ')
+
+        return centre
 
     def get_nucleus_centroids(self, nID, z=-1):
         """
@@ -1871,6 +2289,146 @@ class Nuclei:
         """
         self.data_frames['data_params'].change_col_for_nID('depth', nID, val)
 
+    def set_nucleus_neighbours(self, val, nID):
+        """
+        Set neighbours of nucleus
+
+        :param val:
+        :param nID:
+        :return:
+        """
+        self.data_frames['data_params'].change_col_for_nID('neighbours', nID, val)
+
+    def set_nucleus_neighbours_distance(self, val, nID):
+        """
+        Set neighbours distance of nucleus
+
+        :param val:
+        :param nID:
+        :return:
+        """
+        self.data_frames['data_params'].change_col_for_nID('neighbours_distance', nID, val)
+
+    def set_nucleus_direction(self, val, nID):
+        """
+        Set direction of nucleus
+
+        :param val:
+        :param nID:
+        :return:
+        """
+        self.data_frames['data_params'].change_col_for_nID('direction', nID, val, is_array=True)
+
+    def set_nucleus_apical_distance(self, val, nID):
+        """
+        Set apical distance of nucleus
+
+        :param val:
+        :param nID:
+        :return:
+        """
+        self.data_frames['data_params'].change_col_for_nID('apical_dist', nID, val)
+
+    def set_nucleus_nuclei_in_direction(self, val, nID):
+        """
+        Set nuclei in direction of nucleus
+
+        :param val:
+        :param nID:
+        :return:
+        """
+        self.data_frames['data_params'].change_col_for_nID('nuclei_in_direction', nID, val)
+
+    def set_nucleus_minor_axis(self, val, nID):
+        """
+        Set minor of nucleus
+
+        :param val:
+        :param nID:
+        :return:
+        """
+        self.data_frames['data_params'].change_col_for_nID('minor_axis', nID, val)
+
+    def set_nucleus_major_axis(self, val, nID):
+        """
+        Set major of nucleus
+
+        :param val:
+        :param nID:
+        :return:
+        """
+        self.data_frames['data_params'].change_col_for_nID('major_axis', nID, val)
+
+    def set_nucleus_mami_axis(self, val, nID):
+        """
+        Set major/minor axis of nucleus
+
+        :param val:
+        :param nID:
+        :return:
+        """
+        self.data_frames['data_params'].change_col_for_nID('mami_axis', nID, val)
+
+    def set_nucleus_minor_axis_orientation(self, val, nID):
+        """
+        Set minor axis orientation of nucleus
+
+        :param val:
+        :param nID:
+        :return:
+        """
+        self.data_frames['data_params'].change_col_for_nID('minor_axis_orientation', nID, val)
+
+    def set_nucleus_major_axis_orientation(self, val, nID):
+        """
+        Set major axis orientation of nucleus
+
+        :param val:
+        :param nID:
+        :return:
+        """
+        self.data_frames['data_params'].change_col_for_nID('major_axis_orientation', nID, val)
+
+    def set_nucleus_direction_orientation(self, val, nID):
+        """
+        Set direction orientation of nucleus
+
+        :param val:
+        :param nID:
+        :return:
+        """
+        self.data_frames['data_params'].change_col_for_nID('direction_orientation', nID, val)
+
+    def set_nucleus_bbox(self, val, nID):
+        """
+        Set bbox of nucleus
+
+        :param val:
+        :param nID:
+        :return:
+        """
+        self.data_frames['data_params'].change_col_for_nID('nuc_bbox', nID, val, is_array=True)
+
+    def set_nucleus_volume_depth_ratio(self, val, nID):
+        """
+        Set volume depth ratio of nucleus
+
+        :param val:
+        :param nID:
+        :return:
+        """
+        self.data_frames['data_params'].change_col_for_nID('volume_depth_ratio', nID, val)
+
+    def set_nucleus_surface_volume_ratio(self, val, nID):
+        """
+        Set surface volume ratio of nucleus
+
+        :param val:
+        :param nID:
+        :return:
+        """
+        self.data_frames['data_params'].change_col_for_nID('surface_volume_ratio', nID, val)
+
     def set_nucleus_lamin_int(self, val, nID, force_add=False):
         """
         Set lamin intensity of nucleus
@@ -1904,7 +2462,7 @@ class Nuclei:
         """
         self.data_frames['data_params'].change_col_for_nID('membrane_int', nID, val, force_add=force_add)
 
-    def set_nucleus_centre(self, val, nID, force_add=False):
+    def set_nucleus_centre(self, val, nID):
         """
         Set centre of nucleus
 
@@ -1913,7 +2471,7 @@ class Nuclei:
         :param force_add:
         :return:
         """
-        self.data_frames['data_centre'].change_col_for_nID(['z', 'y', 'x'], nID, val, force_add=force_add)
+        self.data_frames['data_params'].change_col_for_nID('nuc_centre', nID, val, is_array=True)
 
     def set_nucleus_centroids(self, val, nID):
         """

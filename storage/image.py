@@ -133,6 +133,30 @@ class ImageHandler:
         csv_file.close()
 
     @staticmethod
+    def get_exp_csv(exp_id, file_path):
+        """
+        Get experiment information from file
+
+        :param exp_id:
+        :param file_path:
+        :return:
+        """
+        vals = None
+
+        # go through rows and find experiment
+        if os.path.exists(file_path):
+            with open(file_path, 'r') as csvfile:
+                csv_reader = csv.reader(csvfile,
+                                delimiter=cfg.CSV_DEL,
+                                quotechar=cfg.CSV_QUOT)
+
+                for row in csv_reader:
+                    if row[0] == exp_id:
+                        vals = row[1:]
+
+        return vals
+
+    @staticmethod
     def load_image_infos():
         """
         Load images from config/input.csv and assign to specific channels

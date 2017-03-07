@@ -405,6 +405,22 @@ class Correction:
 
         :return:
         """
+        # do remerges
+        if self.corr_remerge is not None:
+            for remerge in self.corr_remerge:
+                # remerge nID
+                if self.segmentation.nuclei.is_nucleus_in_nuclei(remerge) \
+                    and self.segmentation.nuclei.get_nucleus_volume(remerge) < 0:
+                    print('REMERGE %i' % remerge)
+                    self.segmentation.nuclei.remerge_nucleus(remerge,
+                                                             0, (self.segmentation.stacks.lamin.shape[0] - 1),
+                                                             merge_depth=True, force_raw_labels_props=True)
+                else:
+                    print('attemped REMERGE %i' % remerge)
+
+        # resort z values
+        self.segmentation.nuclei.sort_vals_by_z()
+
         # delete non-nuclei
         if self.corr_nonuc is not None:
             for to_delete in self.corr_nonuc:
@@ -425,22 +441,6 @@ class Correction:
                                                              force_raw_labels_props=True)  # force to use raw labels
                 else:
                     print('attemped FILA %i' % fila[0])
-
-        # do remerges
-        if self.corr_remerge is not None:
-            for remerge in self.corr_remerge:
-                # remerge nID
-                if self.segmentation.nuclei.is_nucleus_in_nuclei(remerge) \
-                    and self.segmentation.nuclei.get_nucleus_volume(remerge) < 0:
-                    print('REMERGE %i' % remerge)
-                    self.segmentation.nuclei.remerge_nucleus(remerge,
-                                                             0, (self.segmentation.stacks.lamin.shape[0] - 1),
-                                                             merge_depth=True, force_raw_labels_props=True)
-                else:
-                    print('attemped REMERGE %i' % remerge)
-
-        # resort z values
-        self.segmentation.nuclei.sort_vals_by_z()
 
         # update segmentation
         self.segmentation.update(save=save, calc_nuclei_params=False)

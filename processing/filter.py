@@ -363,3 +363,14 @@ class DetectBlobs(Filter):
         see Filter.apply()
         """
         return feature.blob_log(img, min_sigma=param['size'])
+
+class FillHoles(Filter):
+    """
+    Fill holes in binary images
+    """
+
+    def apply(self, img, param=None):
+        """
+        see Filter.apply()
+        """
+        return ndi.binary_fill_holes(img)

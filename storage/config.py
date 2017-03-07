@@ -44,6 +44,8 @@ file_input = config['Files']['INPUT']
 # criteria for nuclei
 file_nuc_criteria = config['Files']['NUC_CRITERIA']
 
+file_nuclei_param_ranges = config['Files']['NUCLEI_PARAM_RANGES']
+
 """
 Segmentation parameter
 """
@@ -58,6 +60,7 @@ file_lookup_raw = config['Files']['LOOKUP_RAW']
 file_labels_props_raw = config['Files']['LABELS_PROPS_RAW']
 file_stack_labels = config['Files']['STACK_LABELS']
 file_stack_nuclei = config['Files']['STACK_NUCLEI']
+file_stack_membin = config['Files']['STACK_MEMBIN']
 file_stack_lamin = config['Files']['STACK_LAMIN']
 
 file_nuclei_data_params = config['Files']['NUCLEI_DATA_PARAMS']
@@ -117,6 +120,8 @@ image_processing_default_range_offset = int(config['ProcessingSteps']['DEFAULT_R
 image_processing_default_range_int = int(config['ProcessingSteps']['DEFAULT_RANGE_INT'])
 image_processing_default_zoom = int(config['ProcessingSteps']['DEFAULT_ZOOM'])
 image_processing_image_size = int(config['ProcessingSteps']['IMG_SIZE'])
+
+nucleus_calc_elps_rot = int(config['NucleusCalc']['ELPS_ROT'])
 
 """
 Plot parameters
@@ -192,8 +197,10 @@ pd_struct_nuclei_cols = {
     'data_params': ['volume', 'surface', 'depth', 'colour', 'rejected',
                     'lamin_int', 'dapi_int', 'membrane_int',
                     'nuc_edge_dist','area_topbot_ratio',
-                    'area_depth_ratio', 'nuc_bbox'],
-    'data_centre': ['z', 'y', 'x'],
+                    'area_depth_ratio', 'nuc_bbox', 'volume_depth_ratio',
+                    'surface_volume_ratio', 'neighbours', 'neighbours_distance',
+                    'nuc_centre', 'direction', 'apical_dist'],
+    # 'data_centre': ['z', 'y', 'x'],
     # from individual labels
     'data_centroid': ['z', 'y', 'x'],
     'data_bbox': ['z', 'min_row', 'min_col', 'max_row', 'max_col'],
@@ -215,3 +222,8 @@ pd_struct_nuclei_col_types = {
     'data_coords': PD_STRUCT_TYPE_2D,
     'data_area': PD_STRUCT_TYPE_1D_VAL
 }
+
+"""
+Param range selection
+"""
+param_range_params = config['ParamRange']['PARAMS'].split(',')

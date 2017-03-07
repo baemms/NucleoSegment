@@ -322,7 +322,7 @@ class LookupFrame:
 
         return self.get_vals_from_col_for_nID(col, nID, elmnt, join_params=join_params)
 
-    def get_vals_from_col(self, col, only_accepted=False):
+    def get_vals_from_col(self, col, only_accepted=False, data_frame=None):
         """
         Get values from column for all nuclei
 
@@ -331,12 +331,15 @@ class LookupFrame:
         """
         vals = None
 
+        if data_frame is None:
+            data_frame = self.data_frame
+
         if self.is_col_in_data_frame(col):
             # go through indicies and check if nuclei were rejected
             if only_accepted is True:
-                vals = self.extract_accepted_nuclei(self.data_frame[col])
+                vals = self.extract_accepted_nuclei(data_frame[col])
             else:
-                vals = self.data_frame[col].values
+                vals = data_frame[col].values
 
         return vals
 
@@ -376,7 +379,7 @@ class LookupFrame:
 
         return vals_changed
 
-    def change_col_for_nID(self, col, nID, value, force_add=False):
+    def change_col_for_nID(self, col, nID, value, force_add=False, is_array=False):
         """
         Change value in column for nucleus
 
@@ -384,15 +387,20 @@ class LookupFrame:
         :param nID:
         :param value:
         :param force_del:
+        :param is_array:
         :return:
         """
         col_changed = False
+
+        # add column first?
+        if self.is_col_in_data_frame(col) is False:
+            self.data_frame[col] = np.nan
 
         if force_add is True\
             or (self.is_col_in_data_frame(col)\
                 and self.is_nID_in_data_frame(nID)):
             # more than one value?
-            if force_add is True or type(value) is np.ndarray:
+            if force_add is True or type(value) is np.ndarray and is_array is False:
                 # drop data for nucleus
                 if self.is_nID_in_data_frame(nID):
                     self.data_frame.drop(nID, inplace=True)
@@ -413,6 +421,10 @@ class LookupFrame:
                 # append data
                 self.data_frame = self.data_frame.append(new_row)
             else:
+                # convert to object if arrays are stored
+                if is_array is True and self.data_frame[col].dtype.type != np.object_:
+                    self.data_frame[col] = self.data_frame[col].astype(object)
+
                 self.data_frame[col].loc[nID] = value
 
             col_changed = True

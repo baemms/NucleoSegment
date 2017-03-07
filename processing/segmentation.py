@@ -1314,6 +1314,8 @@ class Segmentation:
             ImageHandler.save_stack_as_tiff(self.stacks.labels, stacks_path + cfg.file_stack_labels)
         if hasattr(self.stacks, 'nuclei'):
             ImageHandler.save_stack_as_tiff(self.stacks.nuclei, stacks_path + cfg.file_stack_nuclei)
+        if hasattr(self.stacks, 'membin'):
+            ImageHandler.save_stack_as_tiff(self.stacks.membin, stacks_path + cfg.file_stack_membin)
 
     def load(self, force_props_load=False, force_nuclei_load=False, force_extras_recalc=False):
         """
@@ -1341,6 +1343,8 @@ class Segmentation:
             self.stacks.labels = ImageHandler.load_tiff_as_stack(stacks_path + cfg.file_stack_labels)
         if os.path.isfile(stacks_path + cfg.file_stack_nuclei):
             self.stacks.nuclei = ImageHandler.load_tiff_as_stack(stacks_path + cfg.file_stack_nuclei)
+        if os.path.isfile(stacks_path + cfg.file_stack_membin):
+            self.stacks.membin = ImageHandler.load_tiff_as_stack(stacks_path + cfg.file_stack_membin)
 
         # load label props
         labels_props_file = None
@@ -1414,3 +1418,92 @@ class Segmentation:
         :return:
         """
         self.nuclei = nuclei
+
+    def has_membin(self):
+        """
+        Check if binary membrane stack has been set
+
+        :return:
+        """
+        membin = False
+
+        if hasattr(self.stacks, 'membin') and self.stacks.membin is not None:
+            membin = True
+
+        return membin
+
+    def create_membin(self):
+        """
+        Create binary version of the membrane channel
+
+        :return:
+        """
+        # define processing steps to create binary membrane mask
+        processing_steps = [
+            ['EQU'],
+            ['THR', 'OTSU', 100, '3D'],
+            ['FILL'],
+            ['OPN', 'bin', 3],
+            ['CONV_BIT', 16, '3D']
+        ]
+
+        # apply processing steps
+        self.stacks.membin = ImageProcessing.apply_filters(
+            processing_steps, self.stacks.membrane, verbose=cfg.general_verbose)
+
+    def rot_vector(self, to_rotate, degree=0, axis=0):
+        """
+        Rotate a vector around an axis
+        axis: 0=z; 1=y; 2=x
+
+        :param to_rotate:
+        :param degree:
+        :param axis:
+        :return:
+        """
+
+        # create roation matrices
+        # !! order for vectors in Z, Y, X !!
+        # hence all matrices are transposed
+
+        rot_z = np.transpose(
+            np.array([
+                [math.cos(degree), -math.sin(degree), 0],
+                [math.sin(degree), math.cos(degree), 0],
+                [0, 0, 1]
+            ])
+        )
+
+        rot_y = np.transpose(
+            np.array([
+                [math.cos(degree), 0, math.sin(degree)],
+                [0, 1, 0],
+                [-math.sin(degree), 0, math.cos(degree)]
+            ])
+        )
+
+        rot_x = np.transpose(
+            np.array([
+                [1, 0, 0],
+                [0, math.cos(degree), -math.sin(degree)],
+                [0, math.sin(degree), math.cos(degree)]
+            ])
+        )
+
+        rotated = None
+
+        # transpose array to vector
+        to_rotate = np.transpose([to_rotate])
+
+        # apply rotation
+        if axis == 0:
+            rotated = np.dot(rot_z, to_rotate)
+        elif axis == 1:
+            rotated = np.dot(rot_y, to_rotate)
+        elif axis == 2:
+            rotated = np.dot(rot_x, to_rotate)
+
+        # transpose result back to array
+        rotated = rotated.flatten()
+
+        return rotated
