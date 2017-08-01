@@ -2,17 +2,36 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="13cd4c5e-8e95-43ea-90e5-8b8cf2c8b353" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/nucleo_quant.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/playground/compactness.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/playground/compactness_calculation.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/playground/heatmaps.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/playground/heatmaps_rev.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/playground/heatmaps_rev2.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/playground/heatmaps_rev3.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/playground/layer_stacks.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/playground/membin.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/playground/nematic_ordering.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/playground/pouch_cross_r0.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/playground/pouch_volume_r0.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/playground/pouch_volume_r1.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/playground/pouch_volume_r2.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/playground/volume_stacks.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/config/filter_mapping.csv" afterPath="$PROJECT_DIR$/config/filter_mapping.csv" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/config/gui_labels.ini" afterPath="$PROJECT_DIR$/config/gui_labels.ini" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/config/input.csv" afterPath="$PROJECT_DIR$/config/input.csv" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/config/nuc_criteria.csv" afterPath="$PROJECT_DIR$/config/nuc_criteria.csv" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/config/nuc_seg.ini" afterPath="$PROJECT_DIR$/config/nuc_seg.ini" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/config/processing.csv" afterPath="$PROJECT_DIR$/config/processing.csv" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/frontend/figures/plot.py" afterPath="$PROJECT_DIR$/frontend/figures/plot.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/frontend/gui/labels.py" afterPath="$PROJECT_DIR$/frontend/gui/labels.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/frontend/gui/merge_criteria.py" afterPath="$PROJECT_DIR$/frontend/gui/merge_criteria.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/frontend/gui/nuc_segment.py" afterPath="$PROJECT_DIR$/frontend/gui/nuc_segment.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/frontend/gui/nuc_select.py" afterPath="$PROJECT_DIR$/frontend/gui/nuc_select.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nucleo_segment.py" afterPath="$PROJECT_DIR$/nucleo_segment.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/processing/correction.py" afterPath="$PROJECT_DIR$/processing/correction.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/processing/filter.py" afterPath="$PROJECT_DIR$/processing/filter.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/processing/segmentation.py" afterPath="$PROJECT_DIR$/processing/segmentation.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/storage/config.py" afterPath="$PROJECT_DIR$/storage/config.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/storage/image.py" afterPath="$PROJECT_DIR$/storage/image.py" />
@@ -37,38 +56,37 @@
     <favorites_list name="NucSeg" />
   </component>
   <component name="FileEditorManager">
-    <splitter split-orientation="horizontal" split-proportion="0.71609277">
+    <splitter split-orientation="horizontal" split-proportion="0.6530758">
       <split-first>
         <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-          <file leaf-file-name="segmentation.py" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/processing/segmentation.py">
+          <file leaf-file-name="nucleo_quant.py" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/nucleo_quant.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="180">
-                  <caret line="1064" column="36" selection-start-line="1064" selection-start-column="36" selection-end-line="1064" selection-end-column="36" />
-                  <folding>
-                    <element signature="e#86#96#0" expanded="true" />
-                    <element signature="e#2380#3280#0" expanded="false" />
-                    <element signature="e#21386#21953#0" expanded="false" />
-                    <element signature="e#22035#22566#0" expanded="false" />
-                    <element signature="e#22648#23179#0" expanded="false" />
-                    <element signature="e#23246#23714#0" expanded="false" />
-                    <element signature="e#23755#23924#0" expanded="false" />
-                    <element signature="e#24400#24738#0" expanded="false" />
-                    <element signature="e#24874#26143#0" expanded="false" />
-                    <element signature="e#40552#41302#0" expanded="false" />
-                    <element signature="e#49757#49886#0" expanded="false" />
-                  </folding>
+                <state relative-caret-position="3630">
+                  <caret line="242" column="46" lean-forward="false" selection-start-line="242" selection-start-column="46" selection-end-line="242" selection-end-column="46" />
+                  <folding />
                 </state>
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="nuc_select.py" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/frontend/gui/nuc_select.py">
+          <file leaf-file-name="compactness.py" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/playground/compactness.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="-9">
-                  <caret line="454" column="30" selection-start-line="454" selection-start-column="30" selection-end-line="454" selection-end-column="30" />
+                <state relative-caret-position="1575">
+                  <caret line="112" column="54" lean-forward="false" selection-start-line="112" selection-start-column="54" selection-end-line="112" selection-end-column="54" />
+                  <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="compactness_calculation.py" pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/playground/compactness_calculation.py">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="611">
+                  <caret line="171" column="58" lean-forward="false" selection-start-line="171" selection-start-column="58" selection-end-line="171" selection-end-column="58" />
                   <folding>
-                    <element signature="e#87#118#0" expanded="true" />
+                    <element signature="e#0#17#0" expanded="true" />
+                    <marker date="1501525749000" expanded="true" signature="3247:6160" ph="..." />
                   </folding>
                 </state>
               </provider>
@@ -77,8 +95,8 @@
           <file leaf-file-name="nuclei.py" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/storage/nuclei.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="567">
-                  <caret line="1007" column="55" selection-start-line="1007" selection-start-column="55" selection-end-line="1007" selection-end-column="55" />
+                <state relative-caret-position="10980">
+                  <caret line="748" column="8" lean-forward="false" selection-start-line="748" selection-start-column="8" selection-end-line="748" selection-end-column="8" />
                   <folding>
                     <element signature="e#53#71#0" expanded="true" />
                   </folding>
@@ -86,33 +104,11 @@
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="nucleo_segment.py" pinned="false" current-in-tab="true">
-            <entry file="file://$PROJECT_DIR$/nucleo_segment.py">
+          <file leaf-file-name="plot.py" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/frontend/figures/plot.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="675">
-                  <caret line="279" column="24" selection-start-line="279" selection-start-column="24" selection-end-line="279" selection-end-column="24" />
-                  <folding>
-                    <element signature="e#56#73#0" expanded="true" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="image.py" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/storage/image.py">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="201">
-                  <caret line="146" column="37" selection-start-line="146" selection-start-column="37" selection-end-line="146" selection-end-column="37" />
-                  <folding />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="correction.py" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/processing/correction.py">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="5134">
-                  <caret line="313" column="50" selection-start-line="313" selection-start-column="50" selection-end-line="313" selection-end-column="50" />
+                <state relative-caret-position="6750">
+                  <caret line="464" column="17" lean-forward="false" selection-start-line="464" selection-start-column="17" selection-end-line="464" selection-end-column="17" />
                   <folding />
                 </state>
               </provider>
@@ -124,31 +120,43 @@
         <splitter split-orientation="vertical" split-proportion="0.5">
           <split-first>
             <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-              <file leaf-file-name="nuc_seg.ini" pinned="false" current-in-tab="true">
-                <entry file="file://$PROJECT_DIR$/config/nuc_seg.ini">
+              <file leaf-file-name="nuc_criteria.csv" pinned="false" current-in-tab="true">
+                <entry file="file://$PROJECT_DIR$/config/nuc_criteria.csv">
                   <provider selected="true" editor-type-id="text-editor">
-                    <state relative-caret-position="153">
-                      <caret line="111" column="13" selection-start-line="111" selection-start-column="13" selection-end-line="111" selection-end-column="13" />
+                    <state relative-caret-position="329">
+                      <caret line="32" column="8" lean-forward="false" selection-start-line="32" selection-start-column="8" selection-end-line="32" selection-end-column="8" />
                       <folding />
                     </state>
                   </provider>
                 </entry>
               </file>
-              <file leaf-file-name="config.py" pinned="false" current-in-tab="false">
-                <entry file="file://$PROJECT_DIR$/storage/config.py">
+              <file leaf-file-name="processing.csv" pinned="false" current-in-tab="false">
+                <entry file="file://$PROJECT_DIR$/config/processing.csv">
                   <provider selected="true" editor-type-id="text-editor">
-                    <state relative-caret-position="148">
-                      <caret line="123" column="21" selection-start-line="123" selection-start-column="21" selection-end-line="123" selection-end-column="21" />
+                    <state relative-caret-position="330">
+                      <caret line="22" column="82" lean-forward="false" selection-start-line="22" selection-start-column="82" selection-end-line="22" selection-end-column="82" />
                       <folding />
                     </state>
                   </provider>
                 </entry>
               </file>
-              <file leaf-file-name="filter_mapping.csv" pinned="false" current-in-tab="false">
-                <entry file="file://$PROJECT_DIR$/config/filter_mapping.csv">
+              <file leaf-file-name="filter.py" pinned="false" current-in-tab="false">
+                <entry file="file://$PROJECT_DIR$/processing/filter.py">
                   <provider selected="true" editor-type-id="text-editor">
-                    <state relative-caret-position="90">
-                      <caret line="9" column="11" selection-start-line="9" selection-start-column="4" selection-end-line="9" selection-end-column="11" />
+                    <state relative-caret-position="2850">
+                      <caret line="199" column="10" lean-forward="false" selection-start-line="199" selection-start-column="4" selection-end-line="199" selection-end-column="10" />
+                      <folding>
+                        <element signature="e#51#69#0" expanded="true" />
+                      </folding>
+                    </state>
+                  </provider>
+                </entry>
+              </file>
+              <file leaf-file-name="input.csv" pinned="false" current-in-tab="false">
+                <entry file="file://$PROJECT_DIR$/config/input.csv">
+                  <provider selected="true" editor-type-id="text-editor">
+                    <state relative-caret-position="645">
+                      <caret line="43" column="0" lean-forward="false" selection-start-line="43" selection-start-column="0" selection-end-line="43" selection-end-column="0" />
                       <folding />
                     </state>
                   </provider>
@@ -158,42 +166,24 @@
           </split-first>
           <split-second>
             <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-              <file leaf-file-name="labels.py" pinned="false" current-in-tab="true">
-                <entry file="file://$PROJECT_DIR$/frontend/gui/labels.py">
+              <file leaf-file-name="nuc_seg.ini" pinned="false" current-in-tab="false">
+                <entry file="file://$PROJECT_DIR$/config/nuc_seg.ini">
                   <provider selected="true" editor-type-id="text-editor">
-                    <state relative-caret-position="181">
-                      <caret line="48" column="77" selection-start-line="48" selection-start-column="77" selection-end-line="48" selection-end-column="77" />
+                    <state relative-caret-position="120">
+                      <caret line="8" column="0" lean-forward="false" selection-start-line="8" selection-start-column="0" selection-end-line="8" selection-end-column="0" />
                       <folding />
                     </state>
                   </provider>
                 </entry>
               </file>
-              <file leaf-file-name="gui_labels.ini" pinned="false" current-in-tab="false">
-                <entry file="file://$PROJECT_DIR$/config/gui_labels.ini">
+              <file leaf-file-name="config.py" pinned="false" current-in-tab="true">
+                <entry file="file://$PROJECT_DIR$/storage/config.py">
                   <provider selected="true" editor-type-id="text-editor">
-                    <state relative-caret-position="-1310">
-                      <caret line="35" column="34" selection-start-line="35" selection-start-column="28" selection-end-line="35" selection-end-column="34" />
-                      <folding />
-                    </state>
-                  </provider>
-                </entry>
-              </file>
-              <file leaf-file-name="input.csv" pinned="false" current-in-tab="false">
-                <entry file="file://$PROJECT_DIR$/config/input.csv">
-                  <provider selected="true" editor-type-id="text-editor">
-                    <state relative-caret-position="281">
-                      <caret line="32" column="13" selection-start-line="32" selection-start-column="13" selection-end-line="32" selection-end-column="13" />
-                      <folding />
-                    </state>
-                  </provider>
-                </entry>
-              </file>
-              <file leaf-file-name="processing.csv" pinned="false" current-in-tab="false">
-                <entry file="file://$PROJECT_DIR$/config/processing.csv">
-                  <provider selected="true" editor-type-id="text-editor">
-                    <state relative-caret-position="408">
-                      <caret line="24" column="77" selection-start-line="24" selection-start-column="77" selection-end-line="24" selection-end-column="85" />
-                      <folding />
+                    <state relative-caret-position="194">
+                      <caret line="205" column="28" lean-forward="false" selection-start-line="205" selection-start-column="28" selection-end-line="205" selection-end-column="28" />
+                      <folding>
+                        <element signature="e#89#108#0" expanded="true" />
+                      </folding>
                     </state>
                   </provider>
                 </entry>
@@ -211,6 +201,44 @@
       </list>
     </option>
   </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>vector</find>
+      <find>array</find>
+      <find>nucleus_bb</find>
+      <find>dilate</find>
+      <find>pos_range</find>
+      <find>bbox_ran</find>
+      <find>AND(</find>
+      <find>direction_orientation</find>
+      <find>total_volume_per_layer_height</find>
+      <find>'max_apical_dist'</find>
+      <find>volume'</find>
+      <find>colour</find>
+      <find>join</find>
+      <find>has</find>
+      <find>has_</find>
+      <find>add nuclei</find>
+      <find>contact_</find>
+      <find>'volume'</find>
+      <find>adj_contact_surface</find>
+      <find>compac</find>
+      <find>box</find>
+      <find>compact</find>
+      <find>contact</find>
+      <find>volume</find>
+      <find>voxel_size</find>
+      <find>closeness</find>
+      <find>sphericity</find>
+      <find>calc</find>
+      <find>sph</find>
+      <find>spher</find>
+    </findStrings>
+    <replaceStrings>
+      <replace>total_volume_per_stacking_height</replace>
+      <replace>compactness</replace>
+    </replaceStrings>
+  </component>
   <component name="Git.Settings">
     <option name="PREVIOUS_COMMIT_AUTHORS">
       <list>
@@ -222,25 +250,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/../NucSeg/storage/image.py" />
-        <option value="$PROJECT_DIR$/../NucSeg/config/gui_labels.ini" />
-        <option value="$PROJECT_DIR$/../NucSeg/frontend/gui/labels.py" />
-        <option value="$PROJECT_DIR$/../NucSeg/frontend/gui/nuc_segment.py" />
-        <option value="$PROJECT_DIR$/playground/regexp.py" />
-        <option value="$PROJECT_DIR$/frontend/figures/thread.py" />
-        <option value="$PROJECT_DIR$/frontend/figures/formater.py" />
-        <option value="$PROJECT_DIR$/frontend/figures/formatter.py" />
-        <option value="$PROJECT_DIR$/config/label_criteria.csv" />
-        <option value="$PROJECT_DIR$/frontend/gui/crit_select.py" />
-        <option value="$PROJECT_DIR$/frontend/gui/nuclei_criteria.py" />
-        <option value="$PROJECT_DIR$/nuc_merge.py" />
-        <option value="$PROJECT_DIR$/storage/stacks.py" />
-        <option value="$PROJECT_DIR$/storage/images.py" />
-        <option value="$PROJECT_DIR$/playground/flatten_rgb_box.py" />
-        <option value="$PROJECT_DIR$/processing/image.py" />
-        <option value="$PROJECT_DIR$/playground/machine_learning.py" />
-        <option value="$PROJECT_DIR$/frontend/gui/layout.py" />
-        <option value="$PROJECT_DIR$/processing/classifier.py" />
         <option value="$PROJECT_DIR$/frontend/gui/nuc_criteria.py" />
         <option value="$PROJECT_DIR$/frontend/gui/nuc_process.py" />
         <option value="$PROJECT_DIR$/storage/nucleus.py" />
@@ -251,45 +260,57 @@
         <option value="$PROJECT_DIR$/storage/dataframes.py" />
         <option value="$PROJECT_DIR$/storage/lookup.py" />
         <option value="$PROJECT_DIR$/storage/lookup_bak.py" />
-        <option value="$PROJECT_DIR$/frontend/figures/plot.py" />
-        <option value="$PROJECT_DIR$/frontend/gui/nuc_segment.py" />
         <option value="$PROJECT_DIR$/pandas_test.py" />
-        <option value="$PROJECT_DIR$/config/processing.csv" />
-        <option value="$PROJECT_DIR$/config/nuc_criteria.csv" />
-        <option value="$PROJECT_DIR$/frontend/gui/merge_criteria.py" />
         <option value="$PROJECT_DIR$/frontend/gui/criteria_selection.py" />
-        <option value="$PROJECT_DIR$/processing/correction.py" />
-        <option value="$PROJECT_DIR$/config/input.csv" />
-        <option value="$PROJECT_DIR$/storage/lookup_frame.py" />
         <option value="$PROJECT_DIR$/config/param_ranges.csv" />
         <option value="$PROJECT_DIR$/processing/filter.py" />
         <option value="$PROJECT_DIR$/config/filter_mapping.csv" />
-        <option value="$PROJECT_DIR$/frontend/gui/labels.py" />
-        <option value="$PROJECT_DIR$/config/gui_labels.ini" />
-        <option value="$PROJECT_DIR$/storage/image.py" />
+        <option value="$PROJECT_DIR$/playground/heatmaps.py" />
         <option value="$PROJECT_DIR$/frontend/gui/nuc_select.py" />
+        <option value="$PROJECT_DIR$/processing/correction.py" />
+        <option value="$PROJECT_DIR$/storage/lookup_frame.py" />
+        <option value="$PROJECT_DIR$/playground/nematic_ordering.py" />
+        <option value="$PROJECT_DIR$/playground/membin.py" />
+        <option value="$PROJECT_DIR$/playground/heatmaps_for_report.py" />
+        <option value="$PROJECT_DIR$/processing/image.py" />
+        <option value="$PROJECT_DIR$/playground/pouch_volume.py" />
+        <option value="$PROJECT_DIR$/playground/pouch_cross_r0.py" />
+        <option value="$PROJECT_DIR$/frontend/gui/merge_criteria.py" />
         <option value="$PROJECT_DIR$/processing/segmentation.py" />
-        <option value="$PROJECT_DIR$/storage/config.py" />
-        <option value="$PROJECT_DIR$/config/nuc_seg.ini" />
+        <option value="$PROJECT_DIR$/playground/heatmaps_rev.py" />
+        <option value="$PROJECT_DIR$/playground/heatmaps_rev2.py" />
+        <option value="$PROJECT_DIR$/config/processing.csv" />
+        <option value="$PROJECT_DIR$/playground/heatmaps_rev3.py" />
+        <option value="$PROJECT_DIR$/config/nuc_criteria.csv" />
+        <option value="$PROJECT_DIR$/frontend/gui/nuc_segment.py" />
+        <option value="$PROJECT_DIR$/config/gui_labels.ini" />
+        <option value="$PROJECT_DIR$/frontend/gui/labels.py" />
+        <option value="$PROJECT_DIR$/storage/image.py" />
+        <option value="$PROJECT_DIR$/config/input.csv" />
         <option value="$PROJECT_DIR$/nucleo_segment.py" />
+        <option value="$PROJECT_DIR$/frontend/figures/plot.py" />
+        <option value="$PROJECT_DIR$/playground/pouch_volume_r0.py" />
+        <option value="$PROJECT_DIR$/playground/pouch_volume_r1.py" />
+        <option value="$PROJECT_DIR$/playground/pouch_volume_r2.py" />
+        <option value="$PROJECT_DIR$/playground/layer_stacks.py" />
+        <option value="$PROJECT_DIR$/config/nuc_seg.ini" />
+        <option value="$PROJECT_DIR$/playground/volume_stacks.py" />
+        <option value="$PROJECT_DIR$/playground/compactness_examples.py" />
+        <option value="$PROJECT_DIR$/playground/compactness.py" />
+        <option value="$PROJECT_DIR$/storage/config.py" />
         <option value="$PROJECT_DIR$/storage/nuclei.py" />
+        <option value="$PROJECT_DIR$/nucleo_quant.py" />
+        <option value="$PROJECT_DIR$/playground/compactness_calculation.py" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
     <option name="y" value="23" />
     <option name="width" value="1680" />
-    <option name="height" value="988" />
+    <option name="height" value="989" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
-    <OptionsSetting value="true" id="Add" />
-    <OptionsSetting value="true" id="Remove" />
-    <OptionsSetting value="true" id="Checkout" />
-    <OptionsSetting value="true" id="Update" />
-    <OptionsSetting value="true" id="Status" />
-    <OptionsSetting value="true" id="Edit" />
     <ConfirmationsSetting value="2" id="Add" />
-    <ConfirmationsSetting value="0" id="Remove" />
   </component>
   <component name="ProjectView">
     <navigator currentView="ProjectPane" proportions="" version="1">
@@ -308,12 +329,6 @@
     <panes>
       <pane id="ProjectPane">
         <subPane>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="NucleoSegment" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-          </PATH>
           <PATH>
             <PATH_ELEMENT>
               <option name="myItemId" value="NucleoSegment" />
@@ -349,6 +364,20 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="processing" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="NucleoSegment" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="NucleoSegment" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="playground" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -404,13 +433,11 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scratches">
-        <subPane />
-      </pane>
+      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
+    <property name="settings.editor.selected.configurable" value="project.propDebugger" />
     <property name="settings.editor.splitter.proportion" value="0.2" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/../NucleoSegment_bak" />
   </component>
@@ -430,32 +457,15 @@
       <recent name="$PROJECT_DIR$/../NucSeg/config" />
     </key>
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/playground" />
       <recent name="$PROJECT_DIR$/storage" />
       <recent name="$PROJECT_DIR$/processing" />
       <recent name="$PROJECT_DIR$/config" />
       <recent name="$PROJECT_DIR$/frontend/gui" />
-      <recent name="$PROJECT_DIR$/../NucSeg/processing" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.nucleo_segment">
-    <configuration default="false" name="nucleo_segment" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <module name="NucleoSegment" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/nucleo_segment.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <method />
-    </configuration>
-    <configuration default="false" name="machine_learning" type="PythonConfigurationType" factoryName="Python" temporary="true">
+  <component name="RunManager" selected="Python.pouch_volume_r2">
+    <configuration default="false" name="heatmaps_rev2" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
       <envs>
@@ -467,29 +477,12 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <module name="NucleoSegment" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/playground/machine_learning.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/playground/heatmaps_rev2.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <method />
     </configuration>
-    <configuration default="false" name="nuc_select" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/frontend/gui" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <module name="NucleoSegment" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/frontend/gui/nuc_select.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <method />
-    </configuration>
-    <configuration default="false" name="pandas" type="PythonConfigurationType" factoryName="Python" temporary="true">
+    <configuration default="false" name="nematic_ordering" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
       <envs>
@@ -501,12 +494,29 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <module name="NucleoSegment" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/pandas.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/playground/nematic_ordering.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <method />
     </configuration>
-    <configuration default="false" name="pandas_test" type="PythonConfigurationType" factoryName="Python" temporary="true">
+    <configuration default="false" name="pouch_volume" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/playground" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="NucleoSegment" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/playground/pouch_volume_r0.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <method />
+    </configuration>
+    <configuration default="false" name="nucleo_quant" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
       <envs>
@@ -518,7 +528,24 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <module name="NucleoSegment" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/pandas_test.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/nucleo_quant.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <method />
+    </configuration>
+    <configuration default="false" name="pouch_volume_r2" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/playground" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="NucleoSegment" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/playground/pouch_volume_r2.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <method />
@@ -670,20 +697,38 @@
       <option name="USE_KEYWORD" value="false" />
       <method />
     </configuration>
-    <list size="5">
+    <configuration default="false" name="nucleo_segment" type="PythonConfigurationType" factoryName="Python">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="NucleoSegment" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/nucleo_segment.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <method />
+    </configuration>
+    <list size="6">
       <item index="0" class="java.lang.String" itemvalue="Python.nucleo_segment" />
-      <item index="1" class="java.lang.String" itemvalue="Python.machine_learning" />
-      <item index="2" class="java.lang.String" itemvalue="Python.nuc_select" />
-      <item index="3" class="java.lang.String" itemvalue="Python.pandas" />
-      <item index="4" class="java.lang.String" itemvalue="Python.pandas_test" />
+      <item index="1" class="java.lang.String" itemvalue="Python.heatmaps_rev2" />
+      <item index="2" class="java.lang.String" itemvalue="Python.nematic_ordering" />
+      <item index="3" class="java.lang.String" itemvalue="Python.pouch_volume" />
+      <item index="4" class="java.lang.String" itemvalue="Python.nucleo_quant" />
+      <item index="5" class="java.lang.String" itemvalue="Python.pouch_volume_r2" />
     </list>
     <recent_temporary>
       <list size="5">
-        <item index="0" class="java.lang.String" itemvalue="Python.nucleo_segment" />
-        <item index="1" class="java.lang.String" itemvalue="Python.pandas_test" />
-        <item index="2" class="java.lang.String" itemvalue="Python.pandas" />
-        <item index="3" class="java.lang.String" itemvalue="Python.nuc_select" />
-        <item index="4" class="java.lang.String" itemvalue="Python.machine_learning" />
+        <item index="0" class="java.lang.String" itemvalue="Python.pouch_volume_r2" />
+        <item index="1" class="java.lang.String" itemvalue="Python.nucleo_quant" />
+        <item index="2" class="java.lang.String" itemvalue="Python.pouch_volume" />
+        <item index="3" class="java.lang.String" itemvalue="Python.heatmaps_rev2" />
+        <item index="4" class="java.lang.String" itemvalue="Python.nematic_ordering" />
       </list>
     </recent_temporary>
   </component>
@@ -694,24 +739,24 @@
     <configuration />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="23" width="1680" height="988" extended-state="6" />
+    <frame x="0" y="23" width="1680" height="989" extended-state="6" />
     <editor active="false" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.14225437" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.23701298" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.22186147" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.28679654" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.31601733" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.30411255" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.15732369" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.22162162" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.27675676" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Thumbnails" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32900432" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.22486487" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Thumbnails" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32900432" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.23675676" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4745946" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -748,10 +793,18 @@
     <MESSAGE value="Test" />
     <MESSAGE value="Data handling modified from list structure to pandas dataframes" />
     <MESSAGE value="Works but is slow and uses too much memory. Next step is to port this onto Windows" />
-    <option name="LAST_COMMIT_MESSAGE" value="Works but is slow and uses too much memory. Next step is to port this onto Windows" />
+    <MESSAGE value="Added various measurements such as volume, surface, depth, neighbours, density, ellipsoids" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added various measurements such as volume, surface, depth, neighbours, density, ellipsoids" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/processing/segmentation.py</url>
+          <line>4</line>
+          <option name="timeStamp" value="57" />
+        </line-breakpoint>
+      </breakpoints>
       <default-breakpoints>
         <breakpoint type="python-exception">
           <properties notifyOnTerminate="true" exception="BaseException">
@@ -759,392 +812,388 @@
           </properties>
         </breakpoint>
       </default-breakpoints>
-      <option name="time" value="51" />
+      <option name="time" value="58" />
     </breakpoint-manager>
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/storage/nucleus.py" />
-    <entry file="file://$PROJECT_DIR$/storage/lookup_sqlite.py" />
-    <entry file="file://$USER_HOME$/anaconda/lib/python3.5/site-packages/matplotlib/cbook.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="222">
-          <caret line="429" column="0" selection-start-line="429" selection-start-column="0" selection-end-line="429" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/pandas.py" />
-    <entry file="file://$PROJECT_DIR$/storage/dataframes.py" />
-    <entry file="file://$PROJECT_DIR$/processing/segmentation.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="136">
-          <caret line="787" column="31" selection-start-line="787" selection-start-column="31" selection-end-line="787" selection-end-column="35" />
-          <folding>
-            <element signature="e#86#96#0" expanded="true" />
-            <element signature="e#2380#3280#0" expanded="false" />
-            <element signature="e#21386#21953#0" expanded="false" />
-            <element signature="e#22035#22566#0" expanded="false" />
-            <element signature="e#22648#23179#0" expanded="false" />
-            <element signature="e#23246#23714#0" expanded="false" />
-            <element signature="e#23755#23924#0" expanded="false" />
-            <element signature="e#24400#24738#0" expanded="false" />
-            <element signature="e#24874#26143#0" expanded="false" />
-            <element signature="e#40552#41302#0" expanded="false" />
-            <element signature="e#49757#49886#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/anaconda/lib/python3.5/codecs.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="209">
-          <caret line="308" column="0" selection-start-line="308" selection-start-column="0" selection-end-line="308" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/anaconda/lib/python3.5/site-packages/pandas/core/algorithms.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="191">
-          <caret line="125" column="0" selection-start-line="125" selection-start-column="0" selection-end-line="125" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/anaconda/lib/python3.5/site-packages/pandas/core/series.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="191">
-          <caret line="2414" column="0" selection-start-line="2414" selection-start-column="0" selection-end-line="2414" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/anaconda/lib/python3.5/site-packages/skimage/io/_io.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="201">
-          <caret line="131" column="0" selection-start-line="131" selection-start-column="0" selection-end-line="131" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/storage/objects/nucleus.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$USER_HOME$/anaconda/lib/python3.5/threading.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="210">
-          <caret line="861" column="0" selection-start-line="861" selection-start-column="0" selection-end-line="861" selection-end-column="0" />
+        <state relative-caret-position="14535">
+          <caret line="861" column="0" lean-forward="false" selection-start-line="861" selection-start-column="0" selection-end-line="861" selection-end-column="0" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$USER_HOME$/anaconda/lib/python3.5/site-packages/pandas/indexes/base.py">
+    <entry file="file://$USER_HOME$/anaconda/lib/python3.5/site-packages/matplotlib/image.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="85">
-          <caret line="3050" column="0" selection-start-line="3050" selection-start-column="0" selection-end-line="3050" selection-end-column="0" />
+        <state relative-caret-position="193">
+          <caret line="452" column="0" lean-forward="false" selection-start-line="452" selection-start-column="0" selection-end-line="452" selection-end-column="0" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/storage/lookup_bak.py">
+    <entry file="file://$USER_HOME$/anaconda/lib/python3.5/site-packages/matplotlib/__init__.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="573">
-          <caret line="297" column="8" selection-start-line="297" selection-start-column="8" selection-end-line="309" selection-end-column="19" />
+        <state relative-caret-position="193">
+          <caret line="1811" column="0" lean-forward="false" selection-start-line="1811" selection-start-column="0" selection-end-line="1811" selection-end-column="0" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/frontend/gui/nuc_criteria.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="357">
-          <caret line="33" column="0" selection-start-line="33" selection-start-column="0" selection-end-line="33" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/storage/object.py">
+    <entry file="file://$USER_HOME$/anaconda/lib/python3.5/pickle.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/processing/correction.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="6681">
+          <caret line="401" column="0" lean-forward="false" selection-start-line="401" selection-start-column="0" selection-end-line="401" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/playground/heatmaps.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1224">
+          <caret line="75" column="22" lean-forward="false" selection-start-line="75" selection-start-column="22" selection-end-line="75" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/playground/heatmaps_for_report.py" />
+    <entry file="file://$PROJECT_DIR$/playground/membin.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-13">
+          <caret line="40" column="20" lean-forward="false" selection-start-line="40" selection-start-column="20" selection-end-line="40" selection-end-column="20" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/anaconda/lib/python3.5/site-packages/matplotlib/pyplot.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/storage/images.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="85">
-          <caret line="5" column="10" selection-start-line="5" selection-start-column="10" selection-end-line="5" selection-end-column="10" />
+          <caret line="5" column="10" lean-forward="false" selection-start-line="5" selection-start-column="10" selection-end-line="5" selection-end-column="10" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/storage/struct.py">
+    <entry file="file://$USER_HOME$/anaconda/lib/python3.5/site-packages/skimage/measure/_regionprops.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="68">
-          <caret line="4" column="9" selection-start-line="4" selection-start-column="9" selection-end-line="4" selection-end-column="9" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/processing/segmentation_singleton.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/frontend/figures/thread.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="68">
-          <caret line="4" column="0" selection-start-line="4" selection-start-column="0" selection-end-line="4" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/processing/classifier.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="119">
-          <caret line="24" column="14" selection-start-line="24" selection-start-column="14" selection-end-line="24" selection-end-column="14" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/frontend/gui/layout.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="68">
-          <caret line="4" column="9" selection-start-line="4" selection-start-column="9" selection-end-line="4" selection-end-column="9" />
+        <state relative-caret-position="199">
+          <caret line="341" column="4" lean-forward="false" selection-start-line="341" selection-start-column="4" selection-end-line="341" selection-end-column="4" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/frontend/gui/nuc_process.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="322">
-          <caret line="19" column="36" selection-start-line="19" selection-start-column="36" selection-end-line="19" selection-end-column="36" />
+        <state relative-caret-position="241">
+          <caret line="316" column="9" lean-forward="false" selection-start-line="313" selection-start-column="37" selection-end-line="316" selection-end-column="9" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/frontend/figures/plot.py">
+    <entry file="file://$PROJECT_DIR$/playground/pouch_cross_r0.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="94">
-          <caret line="566" column="0" selection-start-line="566" selection-start-column="0" selection-end-line="566" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/frontend/gui/nuc_segment.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="206">
-          <caret line="1043" column="45" selection-start-line="1043" selection-start-column="44" selection-end-line="1043" selection-end-column="45" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/pandas_test.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="51">
-          <caret line="3" column="0" selection-start-line="3" selection-start-column="0" selection-end-line="29" selection-end-column="10" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/anaconda/lib/python3.5/site-packages/pandas/core/frame.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="217">
-          <caret line="1996" column="0" selection-start-line="1996" selection-start-column="0" selection-end-line="1996" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/anaconda/lib/python3.5/site-packages/pandas/core/internals.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="226">
-          <caret line="3969" column="0" selection-start-line="3969" selection-start-column="0" selection-end-line="3969" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/anaconda/lib/python3.5/site-packages/pandas/tools/merge.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="226">
-          <caret line="1037" column="0" selection-start-line="1037" selection-start-column="0" selection-end-line="1037" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/frontend/gui/merge_criteria.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="3" selection-start-line="0" selection-start-column="3" selection-end-line="0" selection-end-column="3" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/frontend/gui/criteria_selection.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="425">
-          <caret line="36" column="27" selection-start-line="36" selection-start-column="27" selection-end-line="36" selection-end-column="27" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/config/nuc_criteria.csv">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="169">
-          <caret line="24" column="8" selection-start-line="24" selection-start-column="8" selection-end-line="24" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/processing/correction.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="5134">
-          <caret line="313" column="50" selection-start-line="313" selection-start-column="50" selection-end-line="313" selection-end-column="50" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/storage/stacks.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="85">
-          <caret line="5" column="6" selection-start-line="5" selection-start-column="6" selection-end-line="5" selection-end-column="6" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/config/processing.csv">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="408">
-          <caret line="24" column="77" selection-start-line="24" selection-start-column="77" selection-end-line="24" selection-end-column="85" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/processing/filter.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="192">
-          <caret line="338" column="35" selection-start-line="338" selection-start-column="35" selection-end-line="338" selection-end-column="41" />
-          <folding>
-            <element signature="e#51#69#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/storage/lookup_frame.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="219">
-          <caret line="324" column="8" selection-start-line="324" selection-start-column="8" selection-end-line="324" selection-end-column="8" />
-          <folding />
+        <state relative-caret-position="241">
+          <caret line="34" column="1" lean-forward="false" selection-start-line="34" selection-start-column="1" selection-end-line="34" selection-end-column="1" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/processing/image.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-3953">
-          <caret line="6" column="24" selection-start-line="6" selection-start-column="24" selection-end-line="6" selection-end-column="24" />
-          <folding />
+        <state relative-caret-position="2720">
+          <caret line="170" column="28" lean-forward="false" selection-start-line="170" selection-start-column="25" selection-end-line="170" selection-end-column="28" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/config/param_ranges.csv">
+    <entry file="file://$PROJECT_DIR$/frontend/gui/criteria_selection.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="51">
-          <caret line="3" column="0" selection-start-line="3" selection-start-column="0" selection-end-line="3" selection-end-column="0" />
-          <folding />
+        <state relative-caret-position="238">
+          <caret line="25" column="0" lean-forward="false" selection-start-line="25" selection-start-column="0" selection-end-line="25" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/frontend/gui/merge_criteria.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="170">
+          <caret line="22" column="93" lean-forward="false" selection-start-line="22" selection-start-column="93" selection-end-line="22" selection-end-column="93" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/config/filter_mapping.csv">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="90">
-          <caret line="9" column="11" selection-start-line="9" selection-start-column="4" selection-end-line="9" selection-end-column="11" />
-          <folding />
+        <state relative-caret-position="102">
+          <caret line="6" column="5" lean-forward="false" selection-start-line="6" selection-start-column="2" selection-end-line="6" selection-end-column="5" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$USER_HOME$/anaconda/lib/python3.5/site-packages/IPython/core/interactiveshell.py">
+    <entry file="file://$PROJECT_DIR$/nucleo_segment.spec">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="205">
-          <caret line="2884" column="0" selection-start-line="2884" selection-start-column="0" selection-end-line="2884" selection-end-column="0" />
-          <folding />
+        <state relative-caret-position="-359">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/config/gui_labels.ini">
+    <entry file="file://$PROJECT_DIR$/playground/heatmaps_rev.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1310">
-          <caret line="35" column="34" selection-start-line="35" selection-start-column="28" selection-end-line="35" selection-end-column="34" />
-          <folding />
+        <state relative-caret-position="142">
+          <caret line="385" column="56" lean-forward="false" selection-start-line="385" selection-start-column="56" selection-end-line="385" selection-end-column="56" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/storage/image.py">
+    <entry file="file://$PROJECT_DIR$/playground/heatmaps_rev2.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="201">
-          <caret line="146" column="37" selection-start-line="146" selection-start-column="37" selection-end-line="146" selection-end-column="37" />
-          <folding />
+        <state relative-caret-position="142">
+          <caret line="454" column="63" lean-forward="false" selection-start-line="454" selection-start-column="63" selection-end-line="454" selection-end-column="63" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/config/input.csv">
+    <entry file="file://$PROJECT_DIR$/playground/heatmaps_rev3.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="281">
-          <caret line="32" column="13" selection-start-line="32" selection-start-column="13" selection-end-line="32" selection-end-column="13" />
-          <folding />
+        <state relative-caret-position="457">
+          <caret line="480" column="21" lean-forward="false" selection-start-line="480" selection-start-column="21" selection-end-line="480" selection-end-column="21" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/frontend/gui/nuc_criteria.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="187">
+          <caret line="11" column="5" lean-forward="false" selection-start-line="11" selection-start-column="5" selection-end-line="11" selection-end-column="10" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/anaconda/lib/python3.5/configparser.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="212">
+          <caret line="1229" column="0" lean-forward="false" selection-start-line="1229" selection-start-column="0" selection-end-line="1229" selection-end-column="0" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/frontend/gui/labels.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="181">
-          <caret line="48" column="77" selection-start-line="48" selection-start-column="77" selection-end-line="48" selection-end-column="77" />
+        <state relative-caret-position="1173">
+          <caret line="72" column="9" lean-forward="false" selection-start-line="72" selection-start-column="9" selection-end-line="72" selection-end-column="9" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/config/input.csv">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="645">
+          <caret line="43" column="0" lean-forward="false" selection-start-line="43" selection-start-column="0" selection-end-line="43" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/storage/config.py">
+    <entry file="file://$PROJECT_DIR$/frontend/gui/nuc_segment.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="148">
-          <caret line="123" column="21" selection-start-line="123" selection-start-column="21" selection-end-line="123" selection-end-column="21" />
+        <state relative-caret-position="863">
+          <caret line="725" column="33" lean-forward="false" selection-start-line="725" selection-start-column="33" selection-end-line="725" selection-end-column="33" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/config/gui_labels.ini">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="863">
+          <caret line="59" column="22" lean-forward="false" selection-start-line="59" selection-start-column="22" selection-end-line="59" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/playground/pouch_volume_r0.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="578">
+          <caret line="42" column="0" lean-forward="false" selection-start-line="42" selection-start-column="0" selection-end-line="47" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/anaconda/lib/python3.5/site-packages/IPython/core/interactiveshell.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="212">
+          <caret line="2884" column="0" lean-forward="false" selection-start-line="2884" selection-start-column="0" selection-end-line="2884" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/playground/pouch_volume_r1.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="442">
+          <caret line="34" column="0" lean-forward="false" selection-start-line="34" selection-start-column="0" selection-end-line="34" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/playground/pouch_volume_r2.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="574">
+          <caret line="185" column="78" lean-forward="false" selection-start-line="185" selection-start-column="78" selection-end-line="185" selection-end-column="78" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/storage/image.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="187">
+          <caret line="18" column="19" lean-forward="false" selection-start-line="18" selection-start-column="19" selection-end-line="18" selection-end-column="19" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/playground/nuclei.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="149">
+          <caret line="23" column="0" lean-forward="false" selection-start-line="23" selection-start-column="0" selection-end-line="23" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/playground/flatten_rgb_box.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/storage/object.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/nucleo_segment.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="867">
+          <caret line="114" column="0" lean-forward="false" selection-start-line="114" selection-start-column="0" selection-end-line="114" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/processing/filter.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2850">
+          <caret line="199" column="10" lean-forward="false" selection-start-line="199" selection-start-column="4" selection-end-line="199" selection-end-column="10" />
+          <folding>
+            <element signature="e#51#69#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/config/processing.csv">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="330">
+          <caret line="22" column="82" lean-forward="false" selection-start-line="22" selection-start-column="82" selection-end-line="22" selection-end-column="82" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/processing/segmentation.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="180">
-          <caret line="1064" column="36" selection-start-line="1064" selection-start-column="36" selection-end-line="1064" selection-end-column="36" />
+        <state relative-caret-position="290">
+          <caret line="588" column="8" lean-forward="false" selection-start-line="588" selection-start-column="8" selection-end-line="588" selection-end-column="51" />
           <folding>
-            <element signature="e#86#96#0" expanded="true" />
-            <element signature="e#2380#3280#0" expanded="false" />
-            <element signature="e#21386#21953#0" expanded="false" />
-            <element signature="e#22035#22566#0" expanded="false" />
-            <element signature="e#22648#23179#0" expanded="false" />
-            <element signature="e#23246#23714#0" expanded="false" />
-            <element signature="e#23755#23924#0" expanded="false" />
-            <element signature="e#24400#24738#0" expanded="false" />
-            <element signature="e#24874#26143#0" expanded="false" />
-            <element signature="e#40552#41302#0" expanded="false" />
-            <element signature="e#49757#49886#0" expanded="false" />
+            <element signature="e#2526#3426#0" expanded="false" />
+            <element signature="e#22792#23323#0" expanded="false" />
+            <element signature="e#23390#23858#0" expanded="false" />
+            <element signature="e#23899#24068#0" expanded="false" />
+            <element signature="e#24544#24882#0" expanded="false" />
+            <element signature="e#25018#26287#0" expanded="false" />
+            <element signature="e#40272#41022#0" expanded="false" />
+            <element signature="e#49473#49602#0" expanded="false" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/playground/layer_stacks.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="402">
+          <caret line="56" column="17" lean-forward="true" selection-start-line="56" selection-start-column="17" selection-end-line="56" selection-end-column="101" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/frontend/gui/nuc_select.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-9">
-          <caret line="454" column="30" selection-start-line="454" selection-start-column="30" selection-end-line="454" selection-end-column="30" />
-          <folding>
-            <element signature="e#87#118#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="-13">
+          <caret line="439" column="0" lean-forward="true" selection-start-line="439" selection-start-column="0" selection-end-line="439" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/storage/lookup_frame.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="213">
+          <caret line="282" column="8" lean-forward="false" selection-start-line="282" selection-start-column="8" selection-end-line="282" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/playground/volume_stacks.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="474">
+          <caret line="69" column="55" lean-forward="false" selection-start-line="69" selection-start-column="55" selection-end-line="69" selection-end-column="55" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/config/nuc_criteria.csv">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="329">
+          <caret line="32" column="8" lean-forward="false" selection-start-line="32" selection-start-column="8" selection-end-line="32" selection-end-column="8" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/config/nuc_seg.ini">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="153">
-          <caret line="111" column="13" selection-start-line="111" selection-start-column="13" selection-end-line="111" selection-end-column="13" />
+        <state relative-caret-position="120">
+          <caret line="8" column="0" lean-forward="false" selection-start-line="8" selection-start-column="0" selection-end-line="8" selection-end-column="0" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/frontend/figures/plot.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="6750">
+          <caret line="464" column="17" lean-forward="false" selection-start-line="464" selection-start-column="17" selection-end-line="464" selection-end-column="17" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/storage/config.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="194">
+          <caret line="205" column="28" lean-forward="false" selection-start-line="205" selection-start-column="28" selection-end-line="205" selection-end-column="28" />
+          <folding>
+            <element signature="e#89#108#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/storage/nuclei.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="567">
-          <caret line="1007" column="55" selection-start-line="1007" selection-start-column="55" selection-end-line="1007" selection-end-column="55" />
+        <state relative-caret-position="10980">
+          <caret line="748" column="8" lean-forward="false" selection-start-line="748" selection-start-column="8" selection-end-line="748" selection-end-column="8" />
           <folding>
             <element signature="e#53#71#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/nucleo_segment.py">
+    <entry file="file://$PROJECT_DIR$/playground/compactness.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="675">
-          <caret line="279" column="24" selection-start-line="279" selection-start-column="24" selection-end-line="279" selection-end-column="24" />
+        <state relative-caret-position="1575">
+          <caret line="112" column="54" lean-forward="false" selection-start-line="112" selection-start-column="54" selection-end-line="112" selection-end-column="54" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/nucleo_quant.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="3630">
+          <caret line="242" column="46" lean-forward="false" selection-start-line="242" selection-start-column="46" selection-end-line="242" selection-end-column="46" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/playground/compactness_calculation.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="611">
+          <caret line="171" column="58" lean-forward="false" selection-start-line="171" selection-start-column="58" selection-end-line="171" selection-end-column="58" />
           <folding>
-            <element signature="e#56#73#0" expanded="true" />
+            <element signature="e#0#17#0" expanded="true" />
+            <marker date="1501525749000" expanded="true" signature="3247:6160" ph="..." />
           </folding>
         </state>
       </provider>

@@ -5,18 +5,13 @@ Configuration for the main program as singleton pattern ie/ initiated only once
 import configparser
 import os
 
-CFG_PATH = 'config/nuc_seg.ini'
+CFG_PATH = os.path.join('config', 'nuc_seg.ini')
 
 """
 CSV conventions
 """
 CSV_DEL = ';'
 CSV_QUOT = '|'
-
-"""
-Operating system
-"""
-OS_DEL = '/'
 
 """
 Processing steps
@@ -31,20 +26,23 @@ config.read(CFG_PATH)
 
 general_verbose = bool(int(config['General']['VERBOSE']))
 
+quant_tiling_dim = int(config['Quantification']['TILING_DIM'])
+quant_tiling_count = int(config['Quantification']['TILING_COUNT'])
+
 # get path
-path_raw = config['Paths']['RAW']
+path_raw = config['Paths']['RAW'] + os.sep
 
 # Filter information
-file_filter_mapping = config['Files']['FILTER_MAPPING']
-file_processing = config['Files']['PROCESSING']
+file_filter_mapping = os.path.join('config', config['Files']['FILTER_MAPPING'])
+file_processing = os.path.join('config', config['Files']['PROCESSING'])
 
 # map values to variables
-file_input = config['Files']['INPUT']
+file_input = os.path.join('config', config['Files']['INPUT'])
 
 # criteria for nuclei
-file_nuc_criteria = config['Files']['NUC_CRITERIA']
+file_nuc_criteria = os.path.join('config', config['Files']['NUC_CRITERIA'])
 
-file_nuclei_param_ranges = config['Files']['NUCLEI_PARAM_RANGES']
+file_nuclei_param_ranges = os.path.join('config', config['Files']['NUCLEI_PARAM_RANGES'])
 
 """
 Segmentation parameter
@@ -75,12 +73,12 @@ file_nuclei_img_cropped_box = config['Files']['NUCLEI_IMG_CROPPED_BOX']
 file_nuclei_img_projection = config['Files']['NUCLEI_IMG_PROJECTION']
 file_nuclei_img_show = config['Files']['NUCLEI_IMG_SHOW']
 
-path_results = config['Paths']['RESULTS']
-path_tmp = config['Paths']['TMP']
-path_results_stacks_raw = config['Paths']['RESULTS_STACKS_RAW']
-path_results_nucleus_params_raw = config['Paths']['RESULTS_NUC_PARAMS_RAW']
-path_results_nuclei = config['Paths']['RESULTS_NUCLEI']
-path_nuclei_data = config['Paths']['NUCLEI_DATA']
+path_results = config['Paths']['RESULTS'] + os.sep
+path_tmp = config['Paths']['TMP'] + os.sep
+path_results_stacks_raw = config['Paths']['RESULTS_STACKS_RAW'] + os.sep
+path_results_nucleus_params_raw = config['Paths']['RESULTS_NUC_PARAMS_RAW'] + os.sep
+path_results_nuclei = config['Paths']['RESULTS_NUCLEI'] + os.sep
+path_nuclei_data = config['Paths']['NUCLEI_DATA'] + os.sep
 
 label_props_to_get_keys = config['Segmentation']['LABEL_PROPS_TO_GET_KEYS'].split(',')
 
@@ -132,10 +130,10 @@ fontsdict_plot['fontsize'] = config['Fontsdict']['PLOT_FONTSIZE']
 """
 Corrections parameters
 """
-path_corrections = config['Paths']['CORRECTIONS']
-path_correction_stacks = config['Paths']['CORRECTION_STACKS']
-path_results_stacks_corr = config['Paths']['RESULTS_STACKS_CORR']
-path_results_nucleus_params_corr = config['Paths']['RESULTS_NUC_PARAMS_CORR']
+path_corrections = config['Paths']['CORRECTIONS'] + os.sep
+path_correction_stacks = os.path.join('corrections', config['Paths']['CORRECTION_STACKS']) + os.sep
+path_results_stacks_corr = config['Paths']['RESULTS_STACKS_CORR'] + os.sep
+path_results_nucleus_params_corr = config['Paths']['RESULTS_NUC_PARAMS_CORR'] + os.sep
 
 file_corr_fila = config['Files']['CORR_FILA']
 file_corr_nonuc = config['Files']['CORR_NONUC']
@@ -154,8 +152,8 @@ Merge parameters
 file_nuclei = config['Files']['NUCLEI']
 file_labels_props = config['Files']['LABELS_PROPS']
 file_stack_nuclam = config['Files']['STACK_NUCLAM']
-path_merge = config['Paths']['MERGE']
-path_merge_stacks = config['Paths']['MERGE_STACKS']
+path_merge = config['Paths']['MERGE'] + os.sep
+path_merge_stacks = os.path.join('merge', config['Paths']['MERGE_STACKS']) + os.sep
 
 merge_post_dil = int(config['PostProcessing']['DILATION'])
 nuclei_bbox_range = int(config['PostProcessing']['NUCLEI_BBOX_RANGE'])
@@ -186,7 +184,7 @@ clf_method = config['Classifier']['METHOD']
 clf_estimators = int(config['Classifier']['ESTIMATORS'])
 clf_train_params = config['Classifier']['TRAIN_PARAMS'].split(',')
 clf_sig_threshold = float(config['Classifier']['SIG_THR'])
-path_classifier = config['Paths']['CLF']
+path_classifier = config['Paths']['CLF'] + os.sep
 file_classifier = path_classifier + config['Files']['CLF']
 
 """
@@ -199,13 +197,17 @@ pd_struct_nuclei_cols = {
                     'nuc_edge_dist','area_topbot_ratio',
                     'area_depth_ratio', 'nuc_bbox', 'volume_depth_ratio',
                     'surface_volume_ratio', 'neighbours', 'neighbours_distance',
-                    'nuc_centre', 'direction', 'apical_dist'],
+                    'nuc_centre', 'direction', 'apical_dist', 'nuclei_in_direction',
+                    'minor_axis', 'major_axis', 'mami_axis',
+                    'minor_axis_orientation', 'major_axis_orientation',
+                    'direction_orientation', 'contact_surface', 'compactness',
+                    'closeness', 'sphericity'],
     # 'data_centre': ['z', 'y', 'x'],
     # from individual labels
     'data_centroid': ['z', 'y', 'x'],
     'data_bbox': ['z', 'min_row', 'min_col', 'max_row', 'max_col'],
     'data_z_params': ['z', 'area', 'perimeter'],
-    'data_coords': ['z', 'y', 'x']
+    'data_coords': ['z', 'y', 'x', 'is_edge']
 }
 
 PD_STRUCT_TYPE_VAL = 0

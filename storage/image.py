@@ -76,6 +76,7 @@ class ImageHandler:
         iter_info.append(image_info['exp'])
         iter_info.append(image_info['date'])
         iter_info.append(image_info['file'])
+        iter_info.append(image_info['voxel_size'])
         iter_info.append(image_info['bound']['Z-min'])
         iter_info.append(image_info['bound']['Z-max'])
         iter_info.append(image_info['bound']['Y-min'])
@@ -176,14 +177,14 @@ class ImageHandler:
                 if not re.match('^#.*', row[0]):
                     # get image boundaries
                     img_bound = {
-                        'Z-min': int(row[4]), 'Z-max': int(row[5]),
-                        'Y-min': int(row[6]), 'Y-max': int(row[7]),
-                        'X-min': int(row[8]), 'X-max': int(row[9]),
+                        'Z-min': int(row[5]), 'Z-max': int(row[6]),
+                        'Y-min': int(row[7]), 'Y-max': int(row[8]),
+                        'X-min': int(row[9]), 'X-max': int(row[10]),
                      }
 
                     # get channels
                     img_channels = list()
-                    for channel in range(10, len(row)):
+                    for channel in range(11, len(row)):
                         img_channels.append(row[channel])
 
                     # add to image list for processing
@@ -192,10 +193,12 @@ class ImageHandler:
                         'exp': row[1],
                         'date': row[2],
                         'file': row[3],
-                        'path': cfg.path_raw
-                                + row[1] + cfg.OS_DEL
-                                + row[2] + cfg.OS_DEL
-                                + row[3],
+                        'voxel_size': row[4],
+                        'path': os.path.join(
+                                    cfg.path_raw,
+                                    row[1],
+                                    row[2],
+                                    row[3]),
                         'bound': img_bound,
                         'channels': img_channels
                         })
@@ -426,21 +429,25 @@ class ImageHandler:
         # stack for resizing
         res_stack = raw_stack.copy()
 
+        print('TEST STACK', res_stack.shape)
+
+        print('TEST STACK', res_stack.shape)
+
         # define image stacks for more intuitive handling
         channel_stack = dict()
 
         # scale image
         if img_bound['Z-min'] is not None\
                 and img_bound['Z-max'] is not None:
-            res_stack = res_stack[img_bound['Z-min']:img_bound['Z-max'], :, :, :];
+            res_stack = res_stack[img_bound['Z-min']:img_bound['Z-max'], :, :, :]
 
         if img_bound['Y-min'] is not None\
                 and img_bound['Y-max'] is not None:
-            res_stack = res_stack[:, img_bound['Y-min']:img_bound['Y-max'], :, :];
+            res_stack = res_stack[:, img_bound['Y-min']:img_bound['Y-max'], :, :]
 
         if img_bound['X-min'] is not None\
                 and img_bound['X-max'] is not None:
-            res_stack = res_stack[:, :, img_bound['X-min']:img_bound['X-max'], :];
+            res_stack = res_stack[:, :, img_bound['X-min']:img_bound['X-max'], :]
 
         # convert to 8bit from 16bit
         if res_stack[0].dtype == 'uint16':
@@ -450,7 +457,8 @@ class ImageHandler:
         # reorder stacks to channels
         for cID, channel in enumerate(img_channels):
             print('Channel %i:%s' % (cID, channel))
-            channel_stack[channel] = res_stack[:, :, :, cID].copy();
+            channel_stack[channel] = res_stack[:, :, :, cID].copy()
+            print('TEST CHN SHP', channel_stack[channel].shape)
 
         # delete resized stack
         del res_stack
@@ -509,7 +517,10 @@ class ImageHandler:
         :param path:
         :return:
         """
-        stack = io.imread(path)
+        stack = None
+
+        if os.path.exists(path) is True:
+            stack = io.imread(path)
 
         return stack
 

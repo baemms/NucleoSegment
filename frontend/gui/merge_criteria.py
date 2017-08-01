@@ -20,7 +20,7 @@ from frontend.gui.criteria_selection import CriteriaSelection
 class MergeCriteria(CriteriaSelection):
 
     def __init__(self, image_info, parent=None):
-        super(MergeCriteria, self).__init__(image_info, parent=parent)
+        super(MergeCriteria, self).__init__(image_info, parent=parent, force_nuclei_load=True)
 
         # buttons
         self.btn_merge = QtGui.QPushButton(gui_labels.btn_merge)

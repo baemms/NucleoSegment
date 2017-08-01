@@ -312,7 +312,7 @@ class Correction:
 
         if self.corr_remerge is not None:
             with open(dirs.corr + cfg.file_corr_remerge, "wb") as fin:
-                pickle.dump(self.corr_overlap, fin)
+                pickle.dump(self.corr_remerge, fin)
 
     def load_corrections(self):
         """
@@ -349,6 +349,9 @@ class Correction:
                 self.corr_remerge = pickle.load(fin)
 
         self.update_correction_stacks()
+
+        print('TEST CORR LISTS')
+        print(self.corr_fila)
 
     def update_correction_stacks(self):
         """
@@ -399,19 +402,20 @@ class Correction:
 
         return stack
 
-    def apply_corrections(self, save=True):
+    def apply_corrections(self, save=True, do_remerge=True):
         """
         Go through correction lists and apply changes
 
         :return:
         """
         # do remerges
-        if self.corr_remerge is not None:
+        if self.corr_remerge is not None and do_remerge is True:
+            print('REMERGE for %i' % len(self.corr_remerge))
+
             for remerge in self.corr_remerge:
                 # remerge nID
                 if self.segmentation.nuclei.is_nucleus_in_nuclei(remerge) \
                     and self.segmentation.nuclei.get_nucleus_volume(remerge) < 0:
-                    print('REMERGE %i' % remerge)
                     self.segmentation.nuclei.remerge_nucleus(remerge,
                                                              0, (self.segmentation.stacks.lamin.shape[0] - 1),
                                                              merge_depth=True, force_raw_labels_props=True)
@@ -423,19 +427,21 @@ class Correction:
 
         # delete non-nuclei
         if self.corr_nonuc is not None:
+            print('NONUC for %i' % len(self.corr_nonuc))
+
             for to_delete in self.corr_nonuc:
                 if self.segmentation.nuclei.is_nucleus_in_nuclei(to_delete):
-                    print('NONUC %i' % to_delete)
                     self.segmentation.nuclei.reject_nucleus(to_delete)
                 else:
                     print('attempted NONUC %i' % to_delete)
 
         # go through z corrections
         if self.corr_fila is not None:
+            print('FILA for %i' % len(self.corr_fila))
+
             for fila in self.corr_fila:
                 # remerge nID
                 if self.segmentation.nuclei.is_nucleus_in_nuclei(fila[0]):
-                    print('FILA %i' % fila[0])
                     self.segmentation.nuclei.remerge_nucleus(fila[0],
                                                              int(float(fila[1][0])), int(float(fila[1][1])),
                                                              force_raw_labels_props=True)  # force to use raw labels

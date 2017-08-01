@@ -64,6 +64,10 @@ class LookupFrame:
         :param data:
         :return:
         """
+        # add zeros to undefined values
+        if len(self.data_cols) > data.shape[1]:
+            data = np.append(data, np.zeros([len(data), len(self.data_cols) - data.shape[1]]), 1)
+
         # prepare indices as many as there are datapoints
         indices = [nID] * len(data)
 
@@ -73,7 +77,7 @@ class LookupFrame:
         # append data to structure
         self.data_frame = self.data_frame.append(new_data)
 
-    def del_data_row(self, nID, col, arg):
+    def del_data_row(self, nID, col=None, arg=None):
         """
         Add data row to structure
 
@@ -88,13 +92,17 @@ class LookupFrame:
         # COMMENT: You should have used multi-indexing!
         # get all values except the ones matching arg for nID
         if self.is_nID_in_data_frame(nID):
-            filtered_arg = self.data_frame[(self.data_frame[col] != arg)].loc[nID]
+            filtered_arg = None
+
+            if col is not None and arg is not None:
+                filtered_arg = self.data_frame[(self.data_frame[col] != arg)].loc[nID]
 
             # drop all values from nID
             self.data_frame.drop(nID, inplace=True)
 
-            # append data
-            self.data_frame = self.data_frame.append(filtered_arg)
+            if filtered_arg is not None:
+                # append data
+                self.data_frame = self.data_frame.append(filtered_arg)
 
     def remove_nan_rows(self, col):
         """
@@ -307,6 +315,11 @@ class LookupFrame:
                             val = val[0]
             else:
                 val = data
+
+            # check if data is only a single row
+            # FIX: why do I get a string? - ignore this case
+            if type(val) is not str and val.ndim == 1:
+                val = np.array([val])
 
         return val
 

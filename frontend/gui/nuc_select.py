@@ -489,6 +489,9 @@ class NucleoSelect(QtGui.QDialog):
         # get sorted list
         sorted_params = self.segmentation.nuclei.get_param_list_from_nuclei(param, only_accepted=True, sort_by=param)
 
+        # account for nan values
+        sorted_params = sorted_params[sorted_params != np.nan]
+
         # show histogram
         Plot.view_histogram_of_value_list(self.fig_nuclei_param_range[param],
                                           sorted_params,
@@ -1313,7 +1316,7 @@ class NucleoSelect(QtGui.QDialog):
         valid_id = False
 
         # is the id in limit?
-        if id < len(self.nuclei.get_nIDs()) and id >= 0:
+        if id >= 0 and id in self.nuclei.get_nIDs():
             valid_id = True
 
             # set current as previous nucleus
@@ -1740,7 +1743,7 @@ class NucleoSelect(QtGui.QDialog):
         # show the segmentation per plane
         self.add_to_ctn_nucleus_planes()
 
-    def save_nucleus_corr(self, save_to_exp=True):
+    def save_nucleus_corr(self, save_to_exp=False):
         """
         Save correction for z
 
@@ -1776,7 +1779,7 @@ class NucleoSelect(QtGui.QDialog):
         self.correction.save_corrections()
 
         # apply corrections and do not save to disk
-        #self.correction.apply_corrections(save=save)
+        self.correction.apply_corrections(save=save, do_remerge=True)
         self.segmentation.save()
 
         # reload drawing

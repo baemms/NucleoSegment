@@ -5,6 +5,7 @@ Define the input image and define processing steps
 import re
 import numpy as np
 import random
+import os
 
 # Qt libraries
 from PyQt4 import QtGui, QtCore
@@ -251,6 +252,7 @@ class NucleoSegment(QtGui.QMainWindow):
         self.lbl_image_num.setText(str(ImageHandler.extract_num_from_ID(self.image_info['ID'])))
         self.lbl_image_date.setText(self.image_info['date'])
         self.lbl_image_file.setText(self.image_info['file'])
+        self.edt_image_voxel_size.setText(str(self.image_info['voxel_size']))
 
         # channels
         self.clean_ctn_image_channels()
@@ -349,10 +351,12 @@ class NucleoSegment(QtGui.QMainWindow):
                 'exp': self.lbl_image_exp.text(),
                 'date': self.lbl_image_date.text(),
                 'file': self.lbl_image_file.text(),
-                'path': cfg.path_raw
-                        + self.lbl_image_exp.text() + cfg.OS_DEL
-                        + self.lbl_image_date.text() + cfg.OS_DEL
-                        + self.lbl_image_file.text(),
+                'voxel_size': self.edt_image_voxel_size.text(),
+                'path': os.path.join(
+                            cfg.path_raw,
+                            self.lbl_image_exp.text(),
+                            self.lbl_image_date.text(),
+                            self.lbl_image_file.text()),
                 'bound': img_bounds[i],
                 'channels': img_channels
             }
@@ -389,6 +393,7 @@ class NucleoSegment(QtGui.QMainWindow):
         self.lbl_image_num = QtGui.QLabel(gui_labels.img_num)
         self.lbl_image_date = QtGui.QLabel(gui_labels.img_date)
         self.lbl_image_file = QtGui.QLabel(gui_labels.img_file)
+        self.edt_image_voxel_size = QtGui.QLineEdit()
 
         # add event handler
         self.btn_input_image.clicked.connect(self.select_input_image)
@@ -401,14 +406,16 @@ class NucleoSegment(QtGui.QMainWindow):
         container.addWidget(self.btn_input_image, 0, 2)
 
         container.addWidget(QtGui.QLabel(gui_labels.img_file), 1, 0)
-        container.addWidget(QtGui.QLabel(gui_labels.img_exp), 2, 0)
-        container.addWidget(QtGui.QLabel(gui_labels.img_num), 3, 0)
-        container.addWidget(QtGui.QLabel(gui_labels.img_date), 4, 0)
+        container.addWidget(QtGui.QLabel(gui_labels.img_voxel_size), 2, 0)
+        container.addWidget(QtGui.QLabel(gui_labels.img_exp), 3, 0)
+        container.addWidget(QtGui.QLabel(gui_labels.img_num), 4, 0)
+        container.addWidget(QtGui.QLabel(gui_labels.img_date), 5, 0)
 
         container.addWidget(self.lbl_image_file, 1, 1)
-        container.addWidget(self.lbl_image_exp, 2, 1)
-        container.addWidget(self.lbl_image_num, 3, 1)
-        container.addWidget(self.lbl_image_date, 4, 1)
+        container.addWidget(self.edt_image_voxel_size, 2, 1)
+        container.addWidget(self.lbl_image_exp, 3, 1)
+        container.addWidget(self.lbl_image_num, 4, 1)
+        container.addWidget(self.lbl_image_date, 5, 1)
 
         return container
 
@@ -716,6 +723,7 @@ class NucleoSegment(QtGui.QMainWindow):
         self.lbl_image_num.setText(str(img_num))
         self.lbl_image_date.setText(img_date)
         self.lbl_image_file.setText(img_file)
+        self.edt_image_voxel_size.setText('1')
 
         self.load_image()
 

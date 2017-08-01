@@ -71,6 +71,7 @@ class Plot:
 
         plt.tight_layout()
 
+    @staticmethod
     def show_stacks(fig, image_stacks, view_range=range(0, 0), img_title=None,
                 colour_map=None, zoom=1, scale=2.0):
         """
@@ -98,7 +99,7 @@ class Plot:
         if colour_map is None:
             colour_map = list(range(0, num_stacks))
 
-            for i in range(0,len(colour_map)):
+            for i in range(0, len(colour_map)):
                 colour_map[i] = 'gray'
 
         # create figure
@@ -407,6 +408,8 @@ class Plot:
         # get minimum and maximum
         min_value = min(value_list)
         max_value = max(value_list)
+
+        print('TEST RANGE', max_value)
 
         # create histogram
         hist = ax.hist(value_list, log=True, bins=bins, range=(0, max_value))

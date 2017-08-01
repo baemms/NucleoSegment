@@ -30,7 +30,7 @@ from storage.nuclei import Nuclei
 
 class Segmentation:
 
-    def __init__(self, image_info):
+    def __init__(self, image_info, load_stacks=True):
         print('=== Segmentation for %s ===' % image_info['ID'])
 
         load_non_nuclei = False
@@ -54,20 +54,23 @@ class Segmentation:
                 self.get_results_dir(exp_id=parent_info['ID']).stacks_corr + cfg.file_stack_non_nuclei
 
             # load image data
-            self.image_stack = ImageHandler.load_image(parent_info,
-                                                       non_nuclei_path=non_nuclei_path)
+            if load_stacks is True:
+                self.image_stack = ImageHandler.load_image(parent_info,
+                                                           non_nuclei_path=non_nuclei_path)
 
             self.non_nuclei_loaded = True
         else:
             # load image data
-            self.image_stack = ImageHandler.load_image(self.image_info)
+            if load_stacks is True:
+                self.image_stack = ImageHandler.load_image(self.image_info)
 
             self.non_nuclei_loaded = False
 
         # set stacks
-        self.stacks.lamin = self.image_stack[ImageHandler.CHN_LAMIN]
-        self.stacks.membrane = self.image_stack[ImageHandler.CHN_MEMBRANE]
-        self.stacks.dapi = self.image_stack[ImageHandler.CHN_DAPI]
+        if load_stacks is True:
+            self.stacks.lamin = self.image_stack[ImageHandler.CHN_LAMIN]
+            self.stacks.membrane = self.image_stack[ImageHandler.CHN_MEMBRANE]
+            self.stacks.dapi = self.image_stack[ImageHandler.CHN_DAPI]
 
         # load nuclei criteria
         self.get_nuclei_criteria()
@@ -493,11 +496,11 @@ class Segmentation:
                                 AND_labels_props = Segmentation.create_labels_props(AND_props)
 
                                 for i in range((z + 1), y):
-                                    #print('add AND nucleus %i' % i)
+                                    print('add AND nucleus %i' % i)
                                     self.nuclei.add_to_nucleus(i, AND_labels_props, nID,
                                                                remove_before=True)
 
-                            #print('add nucleus %i' % y)
+                            print('add nucleus %i' % y)
                             self.nuclei.add_to_nucleus(y, next_label, nID,
                                                        remove_before=True)
 
@@ -1078,19 +1081,6 @@ class Segmentation:
 
         return ret_label
 
-    @staticmethod
-    def calc_lamin_donut(label_props, imgs):
-        """
-        Calculate lamin donut based on lamin signal
-
-        :param label_props:
-        :param imgs:
-        :return:
-        """
-        donut_props = Segmentation.calc_donut_for_label(label_props, imgs,
-                                                 dilero_param=cfg.criteria_select_lamin_donut_ring)
-        return donut_props['donut_ratio']
-
     def get_sorted_prop_list(self, param):
         """
         Return properties list of a specific parameter
@@ -1192,7 +1182,7 @@ class Segmentation:
         if exp_id is None:
             exp_id = self.image_info['ID']
 
-        dirs.results = ImageHandler.create_dir(cfg.path_results + exp_id + cfg.OS_DEL)
+        dirs.results = ImageHandler.create_dir(cfg.path_results + exp_id + os.sep)
 
         # create merge directory
         dirs.merge = ImageHandler.create_dir(dirs.results + cfg.path_merge)
@@ -1440,16 +1430,19 @@ class Segmentation:
         """
         # define processing steps to create binary membrane mask
         processing_steps = [
-            ['EQU'],
-            ['THR', 'OTSU', 100, '3D'],
-            ['FILL'],
-            ['OPN', 'bin', 3],
-            ['CONV_BIT', 16, '3D']
+                ['EQU'],
+                ['THR', 'OTSU', 100, '3D'],
+                ['CLS', 'bin', 2],
+                ['FILL'],
+                ['OPN', 'bin', 2],
+                ['CONV_BIT', 16, '3D']
         ]
 
         # apply processing steps
         self.stacks.membin = ImageProcessing.apply_filters(
             processing_steps, self.stacks.membrane, verbose=cfg.general_verbose)
+
+        ImageHandler.save_stack_as_tiff(self.stacks.membin, self.get_results_dir().tmp + cfg.file_stack_membin)
 
     def rot_vector(self, to_rotate, degree=0, axis=0):
         """
@@ -1502,6 +1495,10 @@ class Segmentation:
             rotated = np.dot(rot_y, to_rotate)
         elif axis == 2:
             rotated = np.dot(rot_x, to_rotate)
+        elif axis == 3:
+            rot_zy = np.dot(rot_z, rot_y)
+            rot_zyx = np.dot(rot_zy, rot_x)
+            rotated = np.dot(rot_zyx, to_rotate)
 
         # transpose result back to array
         rotated = rotated.flatten()
